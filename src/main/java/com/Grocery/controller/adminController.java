@@ -3,6 +3,7 @@ package com.Grocery.controller;
 import com.Grocery.model.category;
 import com.Grocery.model.grocery;
 import com.Grocery.model.order;
+import com.Grocery.model.orderItem;
 import com.Grocery.model.service;
 import com.Grocery.model.teamMember;
 import com.Grocery.model.user;
@@ -246,37 +247,41 @@ public class adminController {
         return "adminGroceries";
     }
 
-    // ======================= 🟠 ORDERS ======================
-   @GetMapping("/orders")
-public String viewOrders(Model model) {
-    List<order> orders = orderRepo.findByStatus("Confirmed");
-    List<category> categories = categoryRepo.findAll();
-    List<grocery> groceries = groceryRepo.findAll();
+    
+    @GetMapping("/orders")
+    public String viewOrders(Model model) {
+        // ✅ Fetch only confirmed orders
+        List<order> orders = orderRepo.findByStatus("Confirmed");
+        List<category> categories = categoryRepo.findAll();
+        List<grocery> groceries = groceryRepo.findAll();
 
-    // Map: orderId -> (productName -> quantity)
-    Map<String, Map<String, Integer>> ordersProductMap = new HashMap<>();
+        // Map: orderId -> (productName -> quantity)
+        Map<String, Map<String, Integer>> ordersProductMap = new HashMap<>();
 
-    for(order ord : orders) {
-        String orderId = ord.getOrderId();
-        ordersProductMap.putIfAbsent(orderId, new HashMap<>());
-        Map<String, Integer> productMap = ordersProductMap.get(orderId);
+        for (order ord : orders) {
+            String orderId = ord.getOrderId();
+            ordersProductMap.putIfAbsent(orderId, new HashMap<>());
+            Map<String, Integer> productMap = ordersProductMap.get(orderId);
 
-        String product = ord.getProductName();
-        int qty = ord.getQuantity();
+            // ✅ Loop through orderItems instead of productName in order table
+            if (ord.getOrderItems() != null) {
+                for (orderItem oi : ord.getOrderItems()) {
+                    String product = oi.getGroceryItem().getName();
+                    int qty = oi.getQuantity();
 
-        // Only add real products, ignore placeholder "Multiple"
-        if(!product.equals("Multiple")) {
-            productMap.put(product, productMap.getOrDefault(product, 0) + qty);
+                    productMap.put(product, productMap.getOrDefault(product, 0) + qty);
+                }
+            }
         }
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("categories", categories);
+        model.addAttribute("groceries", groceries);
+        model.addAttribute("ordersProductMap", ordersProductMap);
+
+        return "adminOrders";
     }
 
-    model.addAttribute("orders", orders);
-    model.addAttribute("categories", categories);
-    model.addAttribute("groceries", groceries);
-    model.addAttribute("ordersProductMap", ordersProductMap);
-
-    return "adminOrders";
-}
     
     @PostMapping("/confirmOrder")
     public String confirmOrder(@RequestParam Long id) {

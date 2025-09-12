@@ -25,6 +25,7 @@ import jakarta.transaction.Transactional;
 import com.Grocery.repository.categoryRepo;
 import com.Grocery.repository.groceryRepo;
 import com.Grocery.repository.orderRepo;
+import com.Grocery.repository.orderItemRepo;
 import com.Grocery.repository.cartRepo;
 
 import com.Grocery.repository.serviceRepo;
@@ -42,6 +43,9 @@ public class userController {
 
     @Autowired
     private groceryRepo groceryRepo;
+    
+    @Autowired
+    private orderItemRepo orderItemRepo;
 
     @Autowired
     private cartRepo cartRepo;
@@ -264,85 +268,47 @@ public class userController {
     @Transactional
 
     @PostMapping("/checkout")
-    public String placeOrder( HttpSession session, Model model) {
+    public String placeOrder(HttpSession session, Model model) {
 
-    	user u=(user) session.getAttribute("loginUser");
-    	if(u==null) {
-    		return "redirect:/user/home";
-    	}
+        user u = (user) session.getAttribute("loginUser");
+        if (u == null) {
+            return "redirect:/user/home";
+        }
+
         List<cart> cartItems = cartRepo.findByUserId(u.getId());
+        if (cartItems == null || cartItems.isEmpty()) {
+            // no items in cart -> redirect or show message
+            return "redirect:/cart";
+        }
 
+        // calculate total
         double total = cartItems.stream().mapToDouble(cart::getSubtotal).sum();
 
-        
-        String productNames = cartItems.size() > 0
-            ? cartItems.get(0).getGroceryItem().getName()
-            : "Multiple";
-
+        // create Order (no productName / quantity here)
         order o = new order();
         o.setOrderId("ORD" + new Random().nextInt(10000));
         o.setCustomerName(u.getUserName());
-        o.setProductName(productNames);
-        o.setQuantity(cartItems.size());
         o.setTotalAmount(total);
         o.setDate(LocalDate.now());
-    
         o.setStatus("Pending");
+        o.setUser(u); // link user if needed
 
-        orderRepo.save(o);
-
-        // ✅ CLEAR CART
-        cartRepo.deleteByUserId(u.getId());
-
-        model.addAttribute("order", o);
-
-        return "orderConfirmation";
-    }
-    
-    @Transactional
-    @PostMapping("/placeOrder")
-    public String placeOrder(HttpSession session) {
-        user u = (user) session.getAttribute("loginUser");
-        if (u == null) {
-            return "redirect:/user/login";
-        }
-
-        // ✅ Get cart items for the logged-in user
-        List<cart> cartItems = cartRepo.findByUserId(u.getId());
-        if (cartItems == null || cartItems.isEmpty()) {
-            return "redirect:/user/cart";
-        }
-
-        // ✅ Create new order
-        order o = new order();
-        o.setCustomerName(u.getUserName());
-        o.setOrderId("ORD" + System.currentTimeMillis());
-        o.setStatus("Pending");
-        o.setDate(LocalDate.now());
-
-        double total = 0;
-        List<orderItem> orderItems = new ArrayList<>();
+        // save order first to get generated ID
+        order savedOrder = orderRepo.save(o);
 
         for (cart c : cartItems) {
-            orderItem item = new orderItem();
-            item.setGroceryItem(c.getGroceryItem());
-            item.setQuantity(c.getQuantity());
-            item.setOrder(o); // ✅ Link to order
-            orderItems.add(item);
-
-            total += c.getGroceryItem().getPrice() * c.getQuantity();
+            orderItem oi = new orderItem();
+            oi.setGroceryItem(c.getGroceryItem());
+            oi.setQuantity(c.getQuantity());
+            oi.setOrder(savedOrder);
+            orderItemRepo.save(oi);
         }
 
-        o.setTotalAmount(total);
-        o.setOrderItems(orderItems);
-
-        // ✅ Save order (and items, due to cascade)
-        orderRepo.save(o);
-
-        // ✅ Clear cart
+        // clear user's cart
         cartRepo.deleteByUserId(u.getId());
 
-        return "redirect:/user/adminDashboard";
+        model.addAttribute("order", savedOrder);
+        return "orderConfirmation";
     }
 
 

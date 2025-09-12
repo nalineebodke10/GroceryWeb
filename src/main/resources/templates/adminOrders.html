@@ -94,7 +94,7 @@
     }
 
     .modal-header {
-      background-color: #0cc5b7;
+      background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
       color: white;
     }
 
@@ -153,9 +153,9 @@
 	                <th>#</th>
 	                <th>Order ID</th>
 	                <th>Customer</th>
-	                <th>Product</th>
+					<th>Date</th>
 	                <th>Total</th>
-	                <th>Date</th>
+	                <th>Action</th>
 	                <th>Status</th>
 	            </tr>
 	            </thead>
@@ -164,18 +164,41 @@
 	                <td th:text="${stat.index + 1}"></td>
 	                <td th:text="${order.orderId}"></td>
 	                <td th:text="${order.customerName}"></td>
+					<td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}"></td>
 					<td>
-					  <ul class="list-unstyled mb-0">
-					    <li th:each="entry : ${ordersProductMap[order.orderId]}">
-					      <span th:text="${entry.key}"></span> : <span th:text="${entry.value}"></span>
-					    </li>
-					  </ul>
-					</td>
-					<td>
-					   <span th:text="${order.totalAmount}"></span>
+						<span th:text="${order.totalAmount}"></span>
 					 </td>
-	                <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}"></td>
-	                <td><span class="badge red_btn">Accepted</span></td>
+					 <td>
+						<!-- Button -->
+						<button type="button" 
+						        class="btn green_btn text-white btn-sm me-1"
+						        data-bs-toggle="modal"
+						        th:data-bs-target="'#orderModal_' + ${order.orderId}">
+						    <i class="fas fa-eye"></i>
+						</button>
+
+						<!-- Modal -->
+						<div class="modal fade" th:id="'orderModal_' + ${order.orderId}" tabindex="-1" aria-hidden="true">
+						  <div class="modal-dialog modal-dialog-centered">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title text-white">Order <span th:text="${order.orderId}"></span></h5>
+						        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						      </div>
+						      <div class="modal-body">
+						        <ul class="list-group">
+						          <li class="list-group-item" th:each="entry : ${ordersProductMap[order.orderId]}">
+						            <span th:text="${entry.key}"></span> : <span th:text="${entry.value}"></span>
+						          </li>
+						        </ul>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+
+
+					 </td>
+					<td><span class="badge red_btn">Accepted</span></td>
 	            </tr>
 	            </tbody>
 	        </table>
