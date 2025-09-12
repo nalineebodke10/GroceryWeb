@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>About Us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .intro-section {
+            background-color: #f8f9fa;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .service-icon {
+            font-size: 40px;
+            color: #0cc5b7;
+        }
+        .team-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .team-card .social-icons a {
+            font-size: 18px;
+            margin-right: 10px;
+            color: #0cc5b7;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- 🔵 Intro Section -->
+<div class="intro-section">
+    <h1>Welcome to Our Grocery Store</h1>
+    <p>We deliver quality groceries with love and care, directly to your doorstep.</p>
+</div>
+
+<!-- 🟢 What We Provide -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">What We Provide</h2>
+    <div class="row" th:if="${services.size() > 0}">
+        <div class="col-md-4 mb-4" th:each="s : ${services}">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i th:class="${s.icon}" class="service-icon mb-3"></i>
+                    <h5 th:text="${s.title}"></h5>
+                    <p th:text="${s.description}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 🟣 Our Team -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">Our Team</h2>
+    <div class="row" th:if="${team.size() > 0}">
+        <div class="col-md-4 mb-4" th:each="t : ${team}">
+            <div class="card team-card text-center p-3">
+                <img th:src="@{'/images/' + ${t.image}}" class="team-img mx-auto mb-3" alt="Team Member">
+                <h5 th:text="${t.name}"></h5>
+                <p th:text="${t.role}" class="text-muted"></p>
+                <div class="social-icons">
+                    <a th:href="${t.github}" target="_blank"><i class="bi bi-github"></i></a>
+                    <a th:href="${t.telegram}" target="_blank"><i class="bi bi-telegram"></i></a>
+                    <a th:href="${t.linkedin}" target="_blank"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
