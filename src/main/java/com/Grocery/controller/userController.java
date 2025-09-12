@@ -105,6 +105,23 @@ public class userController {
         return "home";
     }
 
+    // ----------- Categories Page -----------
+    @GetMapping("/categories")
+    public String showCategoriesPage(Model model, HttpSession session) {
+        // Fetch all categories from DB
+        model.addAttribute("categories", categoryRepo.findByIsDeleteFalse());
+
+        // If user logged in, add cart count
+        user loggedInUser = (user) session.getAttribute("loginUser");
+        if (loggedInUser != null) {
+            List<cart> userCart = cartRepo.findByUserId(loggedInUser.getId());
+            model.addAttribute("cartCount", userCart.size());
+        }
+
+        return "categories"; // loads categories.html
+    }
+    
+   
     // ----------- Show Grocery Items by Category -----------
     @GetMapping("/category/{id}/items")
     public String showItemsByCategory(@PathVariable Long id,
@@ -246,11 +263,18 @@ public class userController {
 
     // ----------- About Us Page -----------
     @GetMapping("/about")
-    public String showAboutPage(Model model) {
-        model.addAttribute("services", serviceRepo.findAll());
-        model.addAttribute("team", teamRepo.findAll());
-        return "about";
+    public String aboutPage() {
+        return "about"; // must match about.html (no .html extension)
     }
+    
+    //---------My order page----------------
+    @GetMapping("/order")
+    public String orderPage() {
+        // This will look for "order.html" in resources/templates
+        return "order";
+    }
+
+  
 
     // ----------- Default Redirect -----------
     @GetMapping("/")
