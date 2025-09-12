@@ -29,7 +29,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -245,19 +247,36 @@ public class adminController {
     }
 
     // ======================= 🟠 ORDERS ======================
-    @GetMapping("/orders")
-    public String viewOrders(Model model) {
-        List<order> orders = orderRepo.findByStatus("Confirmed");
-        List<category> categories = categoryRepo.findAll();
-        List<grocery> groceries = groceryRepo.findAll();
+   @GetMapping("/orders")
+public String viewOrders(Model model) {
+    List<order> orders = orderRepo.findByStatus("Confirmed");
+    List<category> categories = categoryRepo.findAll();
+    List<grocery> groceries = groceryRepo.findAll();
 
-        model.addAttribute("orders", orders);
-        model.addAttribute("categories", categories);
-        model.addAttribute("groceries", groceries);
+    // Map: orderId -> (productName -> quantity)
+    Map<String, Map<String, Integer>> ordersProductMap = new HashMap<>();
 
-        return "adminOrders"; 
+    for(order ord : orders) {
+        String orderId = ord.getOrderId();
+        ordersProductMap.putIfAbsent(orderId, new HashMap<>());
+        Map<String, Integer> productMap = ordersProductMap.get(orderId);
+
+        String product = ord.getProductName();
+        int qty = ord.getQuantity();
+
+        // Only add real products, ignore placeholder "Multiple"
+        if(!product.equals("Multiple")) {
+            productMap.put(product, productMap.getOrDefault(product, 0) + qty);
+        }
     }
 
+    model.addAttribute("orders", orders);
+    model.addAttribute("categories", categories);
+    model.addAttribute("groceries", groceries);
+    model.addAttribute("ordersProductMap", ordersProductMap);
+
+    return "adminOrders";
+}
     
     @PostMapping("/confirmOrder")
     public String confirmOrder(@RequestParam Long id) {

@@ -154,7 +154,7 @@
 	                <th>Order ID</th>
 	                <th>Customer</th>
 	                <th>Product</th>
-	                <th>Quantity</th>
+	                <th>Total</th>
 	                <th>Date</th>
 	                <th>Status</th>
 	            </tr>
@@ -165,11 +165,15 @@
 	                <td th:text="${order.orderId}"></td>
 	                <td th:text="${order.customerName}"></td>
 					<td>
-					  <span th:text="${order.productName}"></span>
+					  <ul class="list-unstyled mb-0">
+					    <li th:each="entry : ${ordersProductMap[order.orderId]}">
+					      <span th:text="${entry.key}"></span> : <span th:text="${entry.value}"></span>
+					    </li>
+					  </ul>
 					</td>
 					<td>
-					  <span  th:text="${order.quantity}"></span>
-					</td>
+					   <span th:text="${order.totalAmount}"></span>
+					 </td>
 	                <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}"></td>
 	                <td><span class="badge red_btn">Accepted</span></td>
 	            </tr>

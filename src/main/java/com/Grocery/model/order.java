@@ -25,7 +25,7 @@ public class order {
     private double totalAmount;  
 
     
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<orderItem> orderItems;
 
     // --- Getters & Setters ---

@@ -91,19 +91,23 @@ public class userController {
     // ----------- Home Page with Categories -----------
     @GetMapping("/home")
     public String userHome(HttpSession session, Model model) {
-        model.addAttribute("categories", categoryRepo.findByIsDeleteFalse());
+        List<category> categories = categoryRepo.findByIsDeleteFalse();
+        model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
 
         List<grocery> topOffers = groceryRepo.findTop8ByDeleteFalseAndCategoryIsDeleteFalseOrderByDiscountPercentDesc();
-        model.addAttribute("topOffers", topOffers);
+        model.addAttribute("topOffers", topOffers != null ? topOffers : new ArrayList<>());
 
         user loggedInUser = (user) session.getAttribute("loginUser");
+        int cartCount = 0;
         if (loggedInUser != null) {
             List<cart> userCart = cartRepo.findByUserId(loggedInUser.getId());
-            model.addAttribute("cartCount", userCart.size());
+            cartCount = userCart != null ? userCart.size() : 0;
         }
+        model.addAttribute("cartCount", cartCount);
 
         return "home";
     }
+
 
     // ----------- Show Grocery Items by Category -----------
     @GetMapping("/category/{id}/items")
