@@ -8,16 +8,13 @@ import java.util.List;
 
 public interface cartRepo extends JpaRepository<cart, Long> {
 
-    // ✅ Add these 3 custom methods:
-    
-	List<cart> findByUserId(Long userId);
-	
+	// ✅ Add these 3 custom methods:
 
-    void deleteByGroceryItemId(Long groceryItemId);
-    
+	List<cart> findByUserId(Long userId);
+
+	void deleteByGroceryItemId(Long groceryItemId);
 
 	void deleteByUserId(long id);
-
 
 	cart findByGroceryItemIdAndUser(Long groceryId, user loggedInUser);
 }

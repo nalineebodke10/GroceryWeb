@@ -8,85 +8,85 @@ import java.util.List;
 @Table(name = "orders")
 public class order {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String orderId;
-    private String customerName;
-    private LocalDate date;
-    private String status;
-    @ManyToOne
-    @JoinColumn(name = "user_id") // FK reference to user table
-    private user user;
-    
-    private double totalAmount;  
+	private String orderId;
+	private String customerName;
+	private LocalDate date;
+	private String status;
+	@ManyToOne
+	@JoinColumn(name = "user_id") // FK reference to user table
+	private user user;
 
-    
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<orderItem> orderItems;
+	private double totalAmount;
 
-    // --- Getters & Setters ---
-    public Long getId() {
-        return id;
-    }
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<orderItem> orderItems;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	// --- Getters & Setters ---
+	public Long getId() {
+		return id;
+	}
 
-    public String getOrderId() {
-        return orderId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
+	public String getOrderId() {
+		return orderId;
+	}
 
-    public String getCustomerName() {
-        return customerName;
-    }
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-    public LocalDate getDate() {
-        return date;
-    }
-    
-    public user getUser() {
-        return user;
-    }
+	public String getCustomerName() {
+		return customerName;
+	}
 
-    public void setUser(user user) {
-        this.user = user;
-    }
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+	public LocalDate getDate() {
+		return date;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public user getUser() {
+		return user;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setUser(user user) {
+		this.user = user;
+	}
 
-    public double getTotalAmount() {    // ✅ added getter
-        return totalAmount;
-    }
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 
-    public void setTotalAmount(double totalAmount) {   // ✅ added setter
-        this.totalAmount = totalAmount;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public List<orderItem> getOrderItems() {
-        return orderItems;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setOrderItems(List<orderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
+	public double getTotalAmount() { // ✅ added getter
+		return totalAmount;
+	}
+
+	public void setTotalAmount(double totalAmount) { // ✅ added setter
+		this.totalAmount = totalAmount;
+	}
+
+	public List<orderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<orderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
 }

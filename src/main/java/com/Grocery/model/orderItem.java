@@ -1,50 +1,54 @@
 package com.Grocery.model;
 
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.Order;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class orderItem {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private int quantity;
+	private int quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "grocery_item_id")
-    private grocery groceryItem;
-    
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private order order;
+	@ManyToOne
+	@JoinColumn(name = "grocery_item_id")
+	private grocery groceryItem;
 
-    // --- Getters & Setters ---
-    
-    public Long getId() {
-        return id;
-    }
+	@ManyToOne
+	@JoinColumn(name = "order_id")
+	private order order;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	// --- Getters & Setters ---
 
-    public int getQuantity() {
-        return quantity;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public grocery getGroceryItem() {
-        return groceryItem;
-    }
+	public int getQuantity() {
+		return quantity;
+	}
 
-    public void setGroceryItem(grocery groceryItem) {
-        this.groceryItem = groceryItem;
-    }
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public grocery getGroceryItem() {
+		return groceryItem;
+	}
+
+	public void setGroceryItem(grocery groceryItem) {
+		this.groceryItem = groceryItem;
+	}
 
 	public order getOrder() {
 		return order;
@@ -54,7 +58,4 @@ public class orderItem {
 		this.order = order;
 	}
 
-	
-
-  
 }

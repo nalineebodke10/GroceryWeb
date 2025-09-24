@@ -2,228 +2,399 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>My orders - Grocery App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+	<meta charset="UTF-8">
+	<title>My orders - Grocery App</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: rgb(238, 251, 248);
-        }
+	<style>
+		body {
+			font-family: 'Poppins', sans-serif;
+			background-color: rgb(238, 251, 248);
+		}
 
-        .all_btn {
-            background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
-        }
+		.all_btn {
+			background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
+		}
 
-        .groci_div {
-            background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
-        }
+		.groci_div {
+			background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
+		}
 
-        .main_logo {
-            height: 40px;
-            margin-left: 40px;
-        }
+		.main_logo {
+			height: 40px;
+			margin-left: 40px;
+		}
 
-        .cart_icon {
-            background-color: white;
-            height: 45px;
-            width: 45px;
-            border-radius: 100%;
-            padding: 12px;
-        }
+		.search-box {
+			background-color: #fff;
+			
+			overflow: hidden;
+			max-width: 600px;
+			width: 100%;
+		}
 
-        footer {
-            text-decoration: underline;
-            background-color: rgb(48, 48, 48) !important;
-        }
+		.search-box input {
+			border: none;
+			box-shadow: none;
+			padding: 16px;
+			font-size: 16px;
+		}
 
-        .footer_btn:hover {
-            background-color: #0b699c !important;
-        }
+		.search-box input::placeholder {
+			color: #aaa;
+			font-style: italic;
+		}
 
-        .about-section {
-            padding: 60px 0;
-        }
+		.search-box button {
+			border: none;
+			color: white;
+			font-weight: bold;
+			padding: 0 30px;
+			transition: opacity 0.3s ease;
+		}
 
-        .about-text h2 {
-            color: #ff6600;
-            /* orange like in screenshot */
-            font-weight: bold;
-        }
+		.cart_icon {
+			background-color: white;
+			height: 45px;
+			width: 45px;
+			border-radius: 100%;
+			padding: 12px;
+		}
 
-        .about-text h4 {
-            margin-top: 20px;
-            font-weight: bold;
-        }
+		.cart_count {
+			height: 23px;
+			width: 23px;
+			border-radius: 100%;
+			padding: 5px;
+		}
 
-        .about-text p {
-            color: #555;
-        }
 
-        .about-img img {
-            border-radius: 10px;
-            width: 100%;
-            height: auto;
-        }
+		footer {
+			text-decoration: underline;
+			background-color: rgb(48, 48, 48) !important;
+		}
 
-        .provide-section {
-            background-color: #f0fafa;
-            padding: 60px 0;
-            text-align: center;
-        }
+		.footer_btn:hover {
+			background-color: #0b699c !important;
+		}
 
-        .provide-section h2 {
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+		.about-section {
+			padding: 60px 0;
+		}
 
-        .provide-section .icon {
-            font-size: 40px;
-            color: #00b894;
-            margin-bottom: 15px;
-        }
+		.about-text h2 {
+			color: #ff6600;
 
-        .provide-section h5 {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+			font-weight: bold;
+		}
 
-        .provide-section p {
-            color: #555;
-            font-size: 15px;
-        }
-    </style>
+		.about-text h4 {
+			margin-top: 20px;
+			font-weight: bold;
+		}
+
+		.about-text p {
+			color: #555;
+		}
+
+		.about-img img {
+			border-radius: 10px;
+			width: 100%;
+			height: auto;
+		}
+
+		.provide-section {
+			background-color: #f0fafa;
+			padding: 60px 0;
+			text-align: center;
+		}
+
+		.provide-section h2 {
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.provide-section .icon {
+			font-size: 40px;
+			color: #00b894;
+			margin-bottom: 15px;
+		}
+
+		.provide-section h5 {
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+
+		.provide-section p {
+			color: #555;
+			font-size: 15px;
+		}
+
+		.contact-hero {
+			height: 250px;
+			background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+				url('https://img.freepik.com/free-photo/flat-lay-desk-concept-with-copy-space_23-2148459750.jpg') center/cover no-repeat;
+		}
+
+		.info-card {
+			background: #fff;
+			border-radius: 12px;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.info-card:hover {
+			transform: translateY(-6px);
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+		}
+
+		.contact-form {
+			border-radius: 12px;
+			background: #ffffff;
+		}
+
+		.contact-form input,
+		.contact-form textarea {
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		.contact-form input:focus,
+		.contact-form textarea:focus {
+			border-color: #ff5e62;
+			box-shadow: 0 0 6px rgba(255, 94, 98, 0.3);
+		}
+	</style>
 </head>
 
 <body>
 
-    <div>
-        <!-- ✅ Header -->
-        <div class="bg-white">
-            <div class="groci_div p-4 d-flex justify-content-between flex-wrap align-items-center">
-                <a th:href="@{/user/home}">
-                    <img src="/images/logo.webp" class="main_logo" />
-                </a>
+	<div>
+		<!-- ✅ Header -->
+		<div class="bg-white">
+			<div class="groci_div p-4 d-flex justify-content-between flex-wrap align-items-center">
+				<a th:href="@{/user/home}">
+					<img src="/images/logo.webp" class="main_logo" />
+				</a>
 
-                <div class="search-box d-flex" style="width: 40%; min-width: 250px;">
-                    <input type="text" class="form-control rounded-end-0 rounded-start-1"
-                        placeholder="Enter Keyword Here ...">
-                    <button class="rounded-end-1 all_btn">SEARCH</button>
-                </div>
+				<div class="search-box d-flex" style="width: 40%; min-width: 250px;">
+					<input type="text" class="form-control rounded-end-0 rounded-start-1"
+						placeholder="Enter Keyword Here ...">
+					<button class="rounded-end-1 all_btn">SEARCH</button>
+				</div>
 
-                <div class="d-flex">
-                    <a class="position-relative me-5" th:href="@{/user/cart(mobile=${mobile})}">
-                        <div class="cart_icon"><i class="fa-solid fa-cart-shopping text-dark"></i></div>
-                        <span class="badge all_btn position-absolute"
-                            style="top:0; right:0; transform: translate(30%,-20%)" th:text="${cartCount}">0</span>
-                    </a>
-                    <div class="cart_icon rounded-5">
-                        <i class="fa-solid fa-user fs-5"></i>
-                    </div>
-                </div>
-            </div>
+				<div class="d-flex">
+					<a class="position-relative me-5" th:href="@{/user/cart(mobile=${mobile})}">
+						<div class="cart_icon"><i class="fa-solid fa-cart-shopping text-dark"></i></div>
+						<span class="badge cart_count all_btn position-absolute"
+							style="top:0; right:0; transform: translate(30%,-20%)" th:text="${cartCount}">0</span>
+					</a>
+					<div class="cart_icon rounded-5">
+						<i class="fa-solid fa-user fs-5"></i>
+					</div>
+				</div>
+			</div>
 
-            <!-- ✅ Navbar -->
-            <nav class="navbar navbar-expand-lg bg-white shadow-sm position-sticky"
-                style="top:100px; z-index: 1030; height: 50px;">
-                <div class="container">
-                    <div class="collapse navbar-collapse justify-content-center">
+			<!-- ✅ Navbar -->
+			<nav class="navbar navbar-expand-lg bg-white shadow-sm position-sticky"
+				style="top:100px; z-index: 1030; height: 50px;">
+				<div class="container">
+					<div class="collapse navbar-collapse justify-content-center">
 						<ul class="navbar-nav gap-3">
-						               <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/home}">Home</a></li>
-						               <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/categories}">Categories</a></li>
-						               <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/about}">About Us</a></li>
-						               <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/order}">My Orders</a></li>
-						                 <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/contact}">Contact</a></li>
-						           </ul>
-                    </div>
-                </div>
+							<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/home}">Home</a></li>
+							<li class="nav-item"><a class="nav-link fw-bold"
+									th:href="@{/user/categories}">Categories</a></li>
+							<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/about}">About Us</a></li>
+							<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/shop}">Shop</a></li>
+							<!-- New page -->
+							<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/order}">My Orders</a></li>
+							<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/contact}">Contact</a></li>
+						</ul>
+					</div>
+				</div>
 
-                <form th:action="@{/user/login}" method="get" class="justify-content-end" style="margin: 2%;">
-                    <button class="btn px-3 signup all_btn text-white border shadow-sm">Login</button>
-                </form>
-            </nav>
-        </div>
+				<form th:action="@{/user/login}" method="get" class="justify-content-end" style="margin: 2%;">
+					<button class="btn px-3 signup all_btn text-white border shadow-sm">Login</button>
+				</form>
+			</nav>
+		</div>
 
-      
-		
-		
-        <!-- ✅ Footer -->
-        <footer class="footer pt-5 pb-4 shadow">
-            <div class="container">
-                <div class="row row-cols-1 row-cols-md-4 g-4">
 
-                    <!-- About + Social -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">LearnOnline</h5>
-                        <p class="text-white small">Our platform offers interactive tools and flexible learning to make
-                            education engaging for all.</p>
+		<!-- ✅ Contact Page -->
+		<div class="contact-page">
 
-                        <h4 class="text-white">Let's Get Social</h4>
-                        <div class="d-flex justify-content-start gap-3 mt-3">
-                            <a href="#" class="text-white"><i class="bi bi-instagram fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-github fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-envelope-fill fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-linkedin fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-telegram fs-5"></i></a>
-                        </div>
-                    </div>
+			<!-- Hero Section -->
+			<div class="contact-hero text-center text-white d-flex align-items-center justify-content-center">
+				<h1 class="fw-bold display-4">Get in Touch With Us</h1>
+			</div>
 
-                    <!-- Quick Links -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">Quick Links</h5>
-                        <ul class="list-unstyled text-white small">
-                            <li><a th:href="@{/user/home}" class="text-white text-decoration-none">Home</a></li>
-                            <li><a th:href="@{/user/categories}" class="text-white text-decoration-none">Categories</a>
-                            </li>
-                            <li><a th:href="@{/user/about}" class="text-white text-decoration-none">About Us</a></li>
-                            <li><a href="#" class="text-white text-decoration-none">Sign Up</a></li>
-                        </ul>
-                    </div>
+			<div class="container py-5">
+				<div class="row g-4">
 
-                    <!-- Feedback Form -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">Feedback</h5>
-                        <form>
-                            <div class="mb-2">
-                                <input type="text" class="form-control form-control-sm" placeholder="Your Name">
-                            </div>
-                            <div class="mb-2">
-                                <input type="email" class="form-control form-control-sm" placeholder="Your Email">
-                            </div>
-                            <div class="mb-2">
-                                <textarea class="form-control form-control-sm" rows="2"
-                                    placeholder="Your Feedback"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-sm footer_btn all_btn"
-                                style=" color: #ffffff;">Submit</button>
-                        </form>
-                    </div>
+					<!-- Contact Info -->
+					<div class="col-md-3">
+						<div class="info-card shadow text-center p-4 h-100">
+							<i class="bi bi-geo-alt-fill fs-1 text-primary"></i>
+							<h5 class="mt-3">Our Address</h5>
+							<p>123 Main Street, Pune, India</p>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="info-card shadow text-center p-4 h-100">
+							<i class="bi bi-telephone-fill fs-1 text-success"></i>
+							<h5 class="mt-3">Call Us</h5>
+							<p>‪+91 87672 02017‬</p>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="info-card shadow text-center p-4 h-100">
+							<i class="bi bi-envelope-fill fs-1 text-danger"></i>
+							<h5 class="mt-3">Email Us</h5>
+							<p>
+								<a href="mailto:nalineebodke1007@gmail.com" class="text-decoration-none text-secondary">
+									Contact Us
+								</a>
+							</p>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="info-card shadow text-center p-4 h-100">
+							<i class="bi bi-linkedin fs-1 text-primary"></i>
+							<h5 class="mt-3">LinkedIn</h5>
+							<p><a href="https://www.linkedin.com/in/nalinee-bodke-05605b37b/" target="_blank"
+									class="text-secondary text-decoration-none">Visit Our LinkedIn</a></p>
+						</div>
+					</div>
+				</div>
 
-                    <!-- Contact Info -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">Contact Us</h5>
-                        <p class="text-white small"><i class="bi bi-geo-alt-fill me-2"></i>123, Main Street, Pune, India
-                        </p>
-                        <p class="text-white small"><i class="bi bi-telephone-fill me-2"></i>+91 87672 02017</p>
-                        <p class="text-white small"><i class="bi bi-envelope-fill me-2"></i>info@learnonline.com</p>
-                    </div>
+				<!-- Contact Form -->
+				<div class="row mt-5" style="height: 410px;">
+					<!-- Left: Image -->
+					<div class="col-md-6 d-flex">
+						<img src="https://img.freepik.com/free-vector/contact-us-concept-illustration_114360-2299.jpg"
+							class="img-fluid rounded shadow w-100 h-75 object-fit-cover" alt="Contact Illustration">
+					</div>
 
-                </div>
+					<!-- Right: Form -->
+					<div class="col-md-6 h-100 d-flex">
+						<div class="contact-form shadow p-4 rounded bg-white w-100 h-100 d-flex flex-column">
+							<h4 class="fw-bold mb-3 text-center">Send Us a Message</h4>
+							<form class="h-100 d-flex flex-column" th:action="@{/contact}" method="post">
+							    <!-- Name -->
+							    <div class="flex-grow-1">
+							        <input type="text" name="name" class="form-control h-75" placeholder="Your Name" required>
+							    </div>
 
-                <hr class="border-light mt-4">
+							    <!-- Email -->
+							    <div class="flex-grow-1">
+							        <input type="email" name="email" class="form-control h-75" placeholder="Your Email" required>
+							    </div>
 
-                <div class="text-center text-white">
-                    <p class="mb-0 small">&copy; 2025 LearnOnline. All Rights Reserved.</p>
-                </div>
-            </div>
-        </footer>
-    </div>
+							    <!-- Message -->
+							    <div class="mb-3 flex-grow-1">
+							        <textarea name="message" class="form-control h-100" placeholder="Your Message" required></textarea>
+							    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+							    <!-- Submit -->
+							    <button type="submit" class="btn all_btn w-100 text-white mt-auto py-2 fs-6">
+							        Submit
+							    </button>
 
+							    <!-- Success / Error Messages -->
+							    <div th:if="${successMsg}" class="text-success mt-2" th:text="${successMsg}"></div>
+							    <div th:if="${errorMsg}" class="text-danger mt-2" th:text="${errorMsg}"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- Map -->
+				<div class="mt-5">
+					<iframe class="w-100 rounded shadow" height="280px"
+						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.715792812403!2d73.85674331436935!3d18.52043037340688!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c06a7a3eaaa9%3A0xa7a5ed9fddf65b!2sPune%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1679986750099"
+						allowfullscreen="" loading="lazy">
+					</iframe>
+				</div>
+			</div>
+		</div>
+
+
+
+		<!-- ✅ Footer -->
+		<footer class="footer pt-5 pb-4 shadow">
+			<div class="container">
+				<div class="row row-cols-1 row-cols-md-4 g-4">
+
+					<!-- About + Social -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">LearnOnline</h5>
+						<p class="text-white small">Our platform offers interactive tools and flexible learning to make
+							education engaging for all.</p>
+
+						<h4 class="text-white">Let's Get Social</h4>
+						<div class="d-flex justify-content-start gap-3 mt-3">
+							<a href="#" class="text-white"><i class="bi bi-instagram fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-github fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-envelope-fill fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-linkedin fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-telegram fs-5"></i></a>
+						</div>
+					</div>
+
+					<!-- Quick Links -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">Quick Links</h5>
+						<ul class="list-unstyled text-white small">
+							<li><a th:href="@{/user/home}" class="text-white text-decoration-none">Home</a></li>
+							<li><a th:href="@{/user/categories}" class="text-white text-decoration-none">Categories</a>
+							</li>
+							<li><a th:href="@{/user/about}" class="text-white text-decoration-none">About Us</a></li>
+							<li><a href="#" class="text-white text-decoration-none">Sign Up</a></li>
+						</ul>
+					</div>
+
+					<!-- Feedback Form -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">Feedback</h5>
+						<form>
+							<div class="mb-2">
+								<input type="text" class="form-control form-control-sm" placeholder="Your Name">
+							</div>
+							<div class="mb-2">
+								<input type="email" class="form-control form-control-sm" placeholder="Your Email">
+							</div>
+							<div class="mb-2">
+								<textarea class="form-control form-control-sm" rows="2"
+									placeholder="Your Feedback"></textarea>
+							</div>
+							<button type="submit" class="btn btn-sm footer_btn all_btn"
+								style=" color: #ffffff;">Submit</button>
+						</form>
+					</div>
+
+					<!-- Contact Info -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">Contact Us</h5>
+						<p class="text-white small"><i class="bi bi-geo-alt-fill me-2"></i>123, Main Street, Pune, India
+						</p>
+						<p class="text-white small"><i class="bi bi-telephone-fill me-2"></i>+91 87672 02017</p>
+						<p class="text-white small"><i class="bi bi-envelope-fill me-2"></i>info@learnonline.com</p>
+					</div>
+
+				</div>
+
+				<hr class="border-light mt-4">
+
+				<div class="text-center text-white">
+					<p class="mb-0 small">&copy; 2025 LearnOnline. All Rights Reserved.</p>
+				</div>
+			</div>
+		</footer>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

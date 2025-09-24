@@ -9,250 +9,424 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
-  <style>
-	@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Libertinus+Math&display=swap');		@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-		
-		*
-		{
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Poppins:ital,wght@0,100..900&family=Roboto:ital,wght@0,100..900&display=swap" rel="stylesheet">
 
-		    margin: 0px;
-		    padding: 0px;
-		    box-sizing: border-box;
-		   
-		font-family: "Cormorant Infant", serif;
-		}
-		.sidebar_font_size{
-			font-size: 1.1rem;
-		}
-		.logo_font_size{
-			font-size: 1.4rem;
-		}
-		.subheading_font_size{
-			font-size: 1.4rem;
-		}
-		.table_head_font_size{
-			font-size: 1.2rem;
-		}
-		.table_body_font_size{
-			font-size: 1.1rem;
-		}
+  <style>
+    /* ---------- Responsive base font (clamp) ---------- */
+    :root{
+      /* adjust the min, preferred (vw), and max sizes to taste */
+      --base-font: clamp(14px, 1.1vw, 16px);
+      --sidebar-font: 1.1rem;
+      --logo-font: clamp(18px, 2vw, 22px);
+      --subheading-font: clamp(18px, 1.6vw, 22px);
+      --table-head-font: clamp(14px, 2.5vw, 20px);
+      --table-body-font: clamp(13px, 1.8vw, 19px);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Cormorant Infant", serif;
+    }
+
+    html, body {
+      overflow-x: hidden; /* hides horizontal scrollbar */
+    }
 
     body {
       margin: 0;
       padding: 0;
       background-color: #fff;
+      font-size: var(--base-font);
     }
-	
-	.red_btn{
-			background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
-			}
-			
-	.green_btn {
-			 background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
-	}
 
-    .sidebar {
-      background-color: #000;
+    /* ---------- Buttons ---------- */
+    .red_btn {
+      background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
       color: #fff;
-      min-height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 250px;
+      border: none;
     }
 
-    .sidebar h4 {
-      padding: 20px;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .sidebar .nav-link {
+    .green_btn {
+      background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
       color: #fff;
-      padding: 15px;
-      display: block;
+      border: none;
+    }
+
+    .filter_btn {
       transition: background 0.2s;
     }
-
-    .sidebar .nav-link:hover {
-      background-color: #1c1c1c;
+    .filter_btn:hover {
+      background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
     }
+	
+	.offcanvas-mobile {
+	  width: 250px !important; /* make mobile sidebar same as desktop */
+	  background-color: #000;
+	  color: #fff;
+	}
+	
+	.sidebar {
+	      background-color: #000;
+	      color: #fff;
+	      min-height: 100vh;
+	      width: 250px;
+	      position: fixed;
+	      top: 0;
+	      left: 0;
+	    }
 
-    .main-content {
-      margin-left: 250px;
-      padding: 30px;
-      min-height: 100vh;
+	    .sidebar h4 {
+	      padding: 20px;
+	      font-weight: bold;
+	      text-align: center;
+	    }
+
+	    .sidebar .nav-link {
+	      color: #fff;
+	      padding: 15px;
+	      display: block;
+	      transition: background 0.2s;
+	    }
+
+	    .sidebar .nav-link:hover {
+	      background-color: #1c1c1c;
+	    }
+
+    .sidebar_font_size{ font-size: var(--sidebar-font); }
+    .logo_font_size{ font-size: var(--logo-font); }
+    .subheading_font_size{ font-size: var(--subheading-font); }
+    .table_head_font_size{ font-size: var(--table-head-font); }
+    .table_body_font_size{ font-size: var(--table-body-font); }
+
+    /* ---------- Main content ---------- */
+	.main-content {
+	  margin-left: 250px;
+	  padding: 30px 18px;
+	  background-color:  #fff;
+	  min-height: 100vh;
+	  width: calc(100% - 245px);
+	}
+	
+    .custom-width { max-width: 50%; }
+
+    .table th, .table td { vertical-align: middle; }
+
+    .modal-header { background-color: #0cc5b7; color: white; }
+    .modal-footer { background-color: #f1f1f1; }
+
+    /* ---------- Offcanvas (mobile sidebar) ---------- */
+    /* We'll use Bootstrap's offcanvas component for the mobile sidebar.
+       This CSS customizes the offcanvas to look like your sidebar. */
+    .offcanvas-mobile {
+      width: 280px; /* slightly wider for mobile */
+      background-color: #000;
+      color: #fff;
     }
-
-    .custom-width {
-      max-width: 50%;
+    .offcanvas-mobile .offcanvas-body {
+      padding: 0;
     }
-
-    .table th, .table td {
-      vertical-align: middle;
+    .offcanvas-mobile .nav-link {
+      color: #fff;
+      padding: 15px 20px;
+      display: block;
+      font-size: var(--sidebar-font);
     }
+    .offcanvas-mobile .nav-link:hover { background:#1c1c1c; color:#fff; }
 
-    .modal-header {
-      background-color: #0cc5b7;
-      color: white;
-    }
+    /* ---------- Responsive adjustments ---------- */
+    @media (max-width: 991.98px) {
+      /* Hide desktop sidebar on small devices */
+      .sidebar { display: none; }
 
-    .modal-footer {
-      background-color: #f1f1f1;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        position: relative;
-        width: 100%;
-        min-height: auto;
-      }
-
+      /* Make main content full width */
       .main-content {
         margin-left: 0;
+        width: 100%;
+        padding: 16px;
       }
+
+      /* Navbar height smaller on mobile */
+      .navbar { height: auto; padding: 12px; }
+
+      /* Show hamburger button on small screens (it will be d-lg-none) */
+      .hamburger-btn { display: inline-flex !important; }
+
+      /* Adjust modal width on small screens (so modals remain usable) */
+      .modal-dialog.custom-width { max-width: 95%; margin: 1.75rem auto; }
     }
+
+    @media (min-width: 992px) {
+      /* hide the mobile hamburger button on desktop */
+      .hamburger-btn { display: none; }
+    }
+
+    /* optional: make the image thumbnails responsive */
+    .img-thumbnail { object-fit: cover; }
+
+    /* small visual tweaks */
+    .navbar .mentor-info { font-size: 0.95rem; }
+   
   </style>
 </head>
 <body>
 
-	<div class="row">
-	  <!-- Sidebar -->
-	  <div class="sidebar col-2 sidebar_font_size">
-	  		    <h4> GroceryShop</h4>
-	  		    <a href="/admin/dashboard" class="nav-link"><i class="fas fa-home me-2"></i> Dashboard</a>
-	  		    <a href="/admin/categories" class="nav-link"><i class="fas fa-list me-2"></i> Categories</a>
-	  		    <a href="/admin/groceries" class="nav-link"><i class="fas fa-shopping-basket me-2"></i> Groceries</a>
-	  			<a href="/admin/orders" class="nav-link"><i class="fas fa-box me-2"></i> Orders</a>
-	  			<a href="/admin/users" class="nav-link active"><i class="fas fa-user me-2"></i> Users</a>
-	  		    <a href="#" class="nav-link"><i class="fas fa-right-from-bracket me-2"></i> Logout</a>
-	  		  </div>
-
-	  <!-- Main Content -->
-	  <div class="main-content col-10">
-	    <nav class="navbar px-4 py-3 bg-white border mb-5 rounded-3 shadow" style="height: 80px;">
-	      <div class="d-flex justify-content-between w-100 align-items-center">
-	        <div>
-	          <h5 class="d-inline-block mb-0 ms-2">Admin Dashboard</h5>
-	        </div>
-	        <div class="mentor-info">
-	          <span class="fw-semibold text-dark">Nalinee</span>
-	        </div>
-	      </div>
-	    </nav>
-    <!-- Category Content -->
-    <div class="container mb-5 mt-2">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="subheading_font_size">Grocery Categories</h3>
-        <button class="btn green_btn" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-          <i class="fas fa-plus me-1"></i> Add Category
-        </button>
-      </div>
-
-      <!-- Category Table -->
-      <div class="d-flex  justify-content-center">
-		<div class="shadow bg-white w-100 p-4">
-        <table class="table  text-center">
-          <thead class="table_head_font_size" style="height: 50px;">
-            <tr>
-              <th>Category Name</th>
-              <th>Image</th>
-              <th>Added On</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody class="table_body_font_size">
-            <tr th:each="cat : ${categories}">
-              <td th:text="${cat.name}">Fruits</td>
-              <td>
-                <img th:src="@{'/GroceryWeb/uploads/categories/' + ${cat.image}}" width="80" height="80" class="img-thumbnail" />
-              </td>
-              <td th:text="${#temporals.format(cat.createdDate, 'dd MMM yyyy')}">04 Jul 2025</td>
-              <td>
-                <button type="button" class="btn red_btn text-white btn-sm me-1"
-                        data-bs-toggle="modal"
-                        th:data-bs-target="'#editCategoryModal_' + ${cat.id}">
-                  <i class="fas fa-pen-to-square"></i>
-                </button>
-                <a th:href="@{'/admin/category/delete/' + ${cat.id}}" class="btn red_btn text-white btn-sm">
-                  <i class="fas fa-trash"></i>
-                </a>
-              </td>
-
-              <!-- Edit Modal inside the same loop -->
-              <td th:remove="tag">
-                <div class="modal fade" th:id="'editCategoryModal_' + ${cat.id}" tabindex="-1" aria-hidden="true">
-                  <div class="modal-dialog modal-lg custom-width">
-                    <div class="modal-content">
-                      <form th:action="@{/admin/category/update}" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="id" th:value="${cat.id}" />
-                        <div class="modal-header">
-                          <h5 class="modal-title">Edit Category</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="mb-3">
-                            <label class="form-label">Category Name</label>
-                            <input type="text" class="form-control" name="name" th:value="${cat.name}" required>
-                          </div>
-                          <div class="mb-3">
-                            <label class="form-label">Current Image</label><br>
-                            <img th:src="@{'/GroceryWeb/uploads/categories/' + ${cat.image}}" width="80" height="80" class="img-thumbnail mb-2">
-                            <input type="file" class="form-control" name="imageFile">
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="submit" class="btn btn-success">
-                            <i class="fas fa-save me-1"></i> Update
-                          </button>
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                      </form>
-					  
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-		</div>
-      </div>
+  <div class="row g-0">
+    <!-- Sidebar (desktop) -->
+    <div class="sidebar sidebar_font_size">
+      <h4> GroceryShop</h4>
+      <a href="/admin/dashboard" class="nav-link"><i class="fas fa-home me-2"></i> Dashboard</a>
+      <a href="/admin/categories" class="nav-link"><i class="fas fa-list me-2"></i> Categories</a>
+      <a href="/admin/groceries" class="nav-link"><i class="fas fa-shopping-basket me-2"></i> Groceries</a>
+      <a href="/admin/orders" class="nav-link"><i class="fas fa-box me-2"></i> Orders</a>
+      <a href="/admin/users" class="nav-link active"><i class="fas fa-user me-2"></i> Users</a>
+      <a href="/admin/logout" class="nav-link"><i class="fas fa-right-from-bracket me-2"></i> Logout</a>
     </div>
-  </div>
-</div>
 
-<!-- Add Category Modal -->
-<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg custom-width">
-    <div class="modal-content">
-      <form th:action="@{/admin/category/save}" method="post" enctype="multipart/form-data">
-        <div class="modal-header green_btn">
-          <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Category Name</label>
-            <input type="text" class="form-control" name="name" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" class="form-control" name="imageFile" required>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn red_btn ">
-            <i class="fas fa-save me-1 text_white"></i> Save
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Navbar (keeps right-aligned hamburger on small screens) -->
+	  <nav class="navbar px-4 py-3 bg-white border mb-5 rounded-3 shadow" style="height: 80px; width: 100%;">
+	  	        <div class="d-flex justify-content-between w-100 align-items-center">
+	  				<div class="d-flex justify-content-between align-items-center w-100">
+	  				    <h5 class="d-inline-block mb-0 ms-2">Admin Dashboard</h5>
+	  	
+	  				    <!-- Hamburger button (mobile) on right -->
+						<button class="btn btn-outline-secondary hamburger-btn d-lg-none"
+						                  type="button"
+						                  data-bs-toggle="offcanvas"
+						                  data-bs-target="#mobileSidebar"
+						                  aria-controls="mobileSidebar"
+						                  aria-expanded="false"
+						                  aria-label="Open menu">
+						            <i class="fas fa-bars"></i>
+						          </button>
+	  				</div>
+	  	        </div>
+	  	      </nav>
+
+      <!-- Category Content -->
+      <div class="container-fluid mb-5 mt-2 p-0">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="subheading_font_size">Grocery Categories</h3>
+          <button class="btn green_btn" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+            <i class="fas fa-plus me-1"></i> Add Category
           </button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
-      </form>
-    </div>
+
+        <!-- Filter Buttons -->
+        <div class="mb-3 d-flex justify-content-start gap-3 align-items-center flex-wrap">
+
+          <!-- Date Filter -->
+          <div class="position-relative">
+            <form th:action="@{/admin/categories}" method="get">
+              <select id="dateFilter" class="form-select shadow-sm filter_btn" name="dateFilter">
+                <option value="">Filter by Date</option>
+                <option value="">Show All</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="thisWeek">This Week</option>
+                <option value="lastWeek">Last Week</option>
+                <option value="thisMonth">This Month</option>
+                <option value="lastMonth">Last Month</option>
+                <option value="thisYear">This Year</option>
+                <option value="lastYear">Last Year</option>
+                <option value="custom">Custom Date</option>
+              </select>
+            </form>
+
+            <!-- Custom Date Picker (dropdown style) -->
+            <div id="customDateDropdown"
+                 class="shadow p-3 bg-white rounded border"
+                 style="display:none; position:absolute; top:110%; left:0; z-index:1000; min-width:250px;">
+              <form th:action="@{/admin/categories}" method="get" class="d-flex flex-column gap-2">
+                <input type="date" name="startDate" class="form-control" required>
+                <input type="date" name="endDate" class="form-control" required>
+                <button class="btn btn-primary btn-sm" type="submit">Apply</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Ascending Order -->
+          <div>
+            <form th:action="@{/admin/categories}" method="get">
+              <input type="hidden" name="order" value="asc">
+              <button class="btn border shadow-sm filter_btn" type="submit">Ascending</button>
+            </form>
+          </div>
+
+          <!-- Descending Order -->
+          <div>
+            <form th:action="@{/admin/categories}" method="get">
+              <input type="hidden" name="order" value="desc">
+              <button class="btn border shadow-sm filter_btn" type="submit">Descending</button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Category Table -->
+<div class="d-flex justify-content-center">
+  <div class="shadow bg-white w-100 p-4 table-responsive">
+    <!-- Table -->
+    <table class="table text-center align-middle">
+      <thead class="table_head_font_size" style="height: 50px;">
+        <tr>
+          <th>Category Name</th>
+          <th>Image</th>
+          <th>Added On</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody class="table_body_font_size">
+        <tr th:each="cat : ${categories}">
+          <td th:text="${cat.name}">Fruits</td>
+          <td>
+            <img th:src="@{'/GroceryWeb/uploads/categories/' + ${cat.image}}"
+                 width="80" height="80" class="img-thumbnail" />
+          </td>
+          <td th:text="${#temporals.format(cat.createdDate, 'dd MMM yyyy')}">04 Jul 2025</td>
+          <td>
+            <button type="button" class="btn red_btn text-white btn-sm me-1 m-1"
+                    data-bs-toggle="modal"
+                    th:data-bs-target="'#editCategoryModal_' + ${cat.id}">
+              <i class="fas fa-pen-to-square"></i>
+            </button>
+            <a th:href="@{'/admin/category/delete/' + ${cat.id}}" class="btn red_btn text-white btn-sm">
+              <i class="fas fa-trash"></i>
+            </a>
+          </td>
+
+          <!-- Edit Modal -->
+          <td th:remove="tag">
+            <div class="modal fade" th:id="'editCategoryModal_' + ${cat.id}" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-lg custom-width">
+                <div class="modal-content">
+                  <form th:action="@{/admin/category/update}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" th:value="${cat.id}" />
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Category</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" class="form-control" name="name" th:value="${cat.name}" required>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Current Image</label><br>
+                        <img th:src="@{'/GroceryWeb/uploads/categories/' + ${cat.image}}"
+                             width="80" height="80" class="img-thumbnail mb-2">
+                        <input type="file" class="form-control" name="imageFile">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn green_btn">
+                        <i class="fas fa-save me-1"></i> Update
+                      </button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+      </div>
+    </div>
+  </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Add Category Modal -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg custom-width">
+      <div class="modal-content">
+        <form th:action="@{/admin/category/save}" method="post" enctype="multipart/form-data">
+          <div class="modal-header green_btn">
+            <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Category Name</label>
+              <input type="text" class="form-control" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Image</label>
+              <input type="file" class="form-control" name="imageFile" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn red_btn ">
+              <i class="fas fa-save me-1 text_white"></i> Save
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Sidebar (Bootstrap Offcanvas) -->
+  <div class="offcanvas offcanvas-start offcanvas-mobile" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title text-white" id="mobileSidebarLabel">GroceryShop</h5>
+      <button type="button" class="btn-close btn-close-white text-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <nav class="nav flex-column">
+        <a href="/admin/dashboard" class="nav-link"><i class="fas fa-home me-2"></i> Dashboard</a>
+        <a href="/admin/categories" class="nav-link"><i class="fas fa-list me-2"></i> Categories</a>
+        <a href="/admin/groceries" class="nav-link"><i class="fas fa-shopping-basket me-2"></i> Groceries</a>
+        <a href="/admin/orders" class="nav-link"><i class="fas fa-box me-2"></i> Orders</a>
+        <a href="/admin/users" class="nav-link"><i class="fas fa-user me-2"></i> Users</a>
+        <a href="/admin/logout" class="nav-link"><i class="fas fa-right-from-bracket me-2"></i> Logout</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JS to toggle custom date dropdown and close offcanvas on link click -->
+  <script>
+    // date filter dropdown toggle + auto submit for other options
+    document.addEventListener('DOMContentLoaded', function () {
+      const dateFilter = document.getElementById("dateFilter");
+      const customDateDropdown = document.getElementById("customDateDropdown");
+
+      if (dateFilter) {
+        dateFilter.addEventListener("change", function () {
+          if (this.value === "custom") {
+            customDateDropdown.style.display = "block";
+          } else {
+            customDateDropdown.style.display = "none";
+            // submit the parent form if exists (for other filters)
+            if (this.form) this.form.submit();
+          }
+        });
+      }
+
+      // Close mobile offcanvas when a nav link is clicked (improves UX)
+      const mobileOffcanvasEl = document.getElementById('mobileSidebar');
+      if (mobileOffcanvasEl) {
+        mobileOffcanvasEl.addEventListener('shown.bs.offcanvas', function () {
+          // attach click handlers to links
+          mobileOffcanvasEl.querySelectorAll('a.nav-link').forEach(function (lnk) {
+            lnk.addEventListener('click', function () {
+              const offcanvasInstance = bootstrap.Offcanvas.getInstance(mobileOffcanvasEl);
+              if (offcanvasInstance) offcanvasInstance.hide();
+            });
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

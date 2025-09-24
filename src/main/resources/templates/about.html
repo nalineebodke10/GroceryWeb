@@ -2,310 +2,387 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>About Us - Grocery App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+	<meta charset="UTF-8">
+	<title>About Us - Grocery App</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: rgb(238, 251, 248);
-        }
+	<style>
+		body {
+			font-family: 'Poppins', sans-serif;
+			background-color: rgb(255, 255, 255);
+		}
 
-        .all_btn {
-            background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
-        }
+		.all_btn {
+			background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
+		}
 
-        .groci_div {
-            background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
-        }
+		.groci_div {
+			background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
+		}
 
-        .main_logo {
-            height: 40px;
-            margin-left: 40px;
-        }
+		.main_logo {
+			height: 40px;
+			margin-left: 40px;
+		}
 
-        .cart_icon {
-            background-color: white;
-            height: 45px;
-            width: 45px;
-            border-radius: 100%;
-            padding: 12px;
-        }
+		.search-box {
+			background-color: #fff;
+			overflow: hidden;
+			max-width: 600px;
+			width: 100%;
+		}
 
-        footer {
-            text-decoration: underline;
-            background-color: rgb(48, 48, 48) !important;
-        }
+		.search-box input {
+			border: none;
+			box-shadow: none;
+			padding: 16px;
+			font-size: 16px;
+		}
 
-        .footer_btn:hover {
-            background-color: #0b699c !important;
-        }
+		.search-box input::placeholder {
+			color: #aaa;
+			font-style: italic;
+		}
 
-        .about-section {
-            padding: 60px 0;
-        }
+		.search-box button {
+			border: none;
+			color: white;
+			font-weight: bold;
+			padding: 0 30px;
+			transition: opacity 0.3s ease;
+		}
 
-        .about-text h2 {
-            color: #ff6600;
-            /* orange like in screenshot */
-            font-weight: bold;
-        }
+		.cart_icon {
+			background-color: white;
+			height: 45px;
+			width: 45px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+			/* important so badge stays inside */
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		}
 
-        .about-text h4 {
-            margin-top: 20px;
-            font-weight: bold;
-        }
+		.cart_icon i {
+			font-size: 15x;
+		}
 
-        .about-text p {
-            color: #555;
-        }
+		.cart_count {
+			position: absolute;
+			top: -4px;
+			right: -4px;
+			background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
+			color: white;
+			font-size: 12px;
+			font-weight: bold;
+			padding: 5px;
+			border-radius: 50%;
+			height: 23px;
+			min-width: 23px;
+			text-align: center;
+		}
 
-        .about-img img {
-            border-radius: 10px;
-            width: 100%;
-            height: auto;
-        }
 
-        .provide-section {
-            background-color: #f0fafa;
-            padding: 60px 0;
-            text-align: center;
-        }
+		footer {
+			text-decoration: underline;
+			background-color: rgb(48, 48, 48) !important;
+		}
 
-        .provide-section h2 {
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+		.footer_btn:hover {
+			background-color: #0b699c !important;
+		}
 
-        .provide-section .icon {
-            font-size: 40px;
-            color: #00b894;
-            margin-bottom: 15px;
-        }
+		.about-section {
+			background-color: #fff;
+			padding: 20px 0;
+			margin: 0%;
+			width: 100%;
+			min-height: 400px;
+			box-shadow: 2px 2px 2px 2px #f5f5f5;
+		}
 
-        .provide-section h5 {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+		.about-section .row {
+			display: flex;
+			align-items: center;
+			/* ✅ Vertically centers image + text */
+			justify-content: center;
+		}
 
-        .provide-section p {
-            color: #555;
-            font-size: 15px;
-        }
-    </style>
+		.about-text h2 {
+			color: #ff6600;
+			/* orange like in screenshot */
+			font-weight: bold;
+		}
+
+		.about-text h5 {
+			margin-top: 20px;
+			font-weight: bold;
+		}
+
+		.about-text p {
+			color: #555;
+		}
+
+		.about-img {
+			background: url('/images/aboutUs_img.jpeg') no-repeat center center;
+			background-size: cover;
+			min-height: 400px;
+			object-fit: cover;
+			width: 550px;
+			/* or any height you want */
+			border-radius: 10px;
+			/* optional for rounded edges */
+		}
+
+		.provide-section {
+			background-color: #f0fafa;
+			padding: 60px 0;
+			text-align: center;
+		}
+
+		.provide-section h2 {
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.provide-section .icon {
+			font-size: 40px;
+			color: #00b894;
+			margin-bottom: 15px;
+		}
+
+		.provide-section h5 {
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+
+		.provide-section p {
+			color: #555;
+			font-size: 15px;
+		}
+	</style>
 </head>
 
 <body>
 
-    <div>
-        <!-- ✅ Header -->
-        <div class="bg-white">
-            <div class="groci_div p-4 d-flex justify-content-between flex-wrap align-items-center">
-                <a th:href="@{/user/home}">
-                    <img src="/images/logo.webp" class="main_logo" />
-                </a>
+	<div>
+		<div class="bg-white">
+			<div>
+				<div class="groci_div p-4 d-flex justify-content-between flex-wrap align-items-center">
+					<a th:href="@{/user/home}"><img src="/images/logo.webp" class="main_logo " /></a>
 
-                <div class="search-box d-flex" style="width: 40%; min-width: 250px;">
-                    <input type="text" class="form-control rounded-end-0 rounded-start-1"
-                        placeholder="Enter Keyword Here ...">
-                    <button class="rounded-end-1 all_btn">SEARCH</button>
-                </div>
+					<div class="search-box d-flex" style="width: 40%; min-width: 250px;">
+						<input type="text" class="form-control rounded-end-0 rounded-start-1"
+							placeholder="Enter Keyword Here ...">
+						<button class="rounded-end-1 all_btn">SEARCH</button>
+					</div>
+					<div class="d-flex">
+						<a class="me-5" style="cursor: pointer; text-decoration: none;" th:href="@{/user/cart}">
 
-                <div class="d-flex">
-                    <a class="position-relative me-5" th:href="@{/user/cart(mobile=${mobile})}">
-                        <div class="cart_icon"><i class="fa-solid fa-cart-shopping text-dark"></i></div>
-                        <span class="badge all_btn position-absolute"
-                            style="top:0; right:0; transform: translate(30%,-20%)" th:text="${cartCount}">0</span>
-                    </a>
-                    <div class="cart_icon rounded-5">
-                        <i class="fa-solid fa-user fs-5"></i>
-                    </div>
-                </div>
-            </div>
+							<div class="cart_icon position-relative">
+								<i class="fa-solid fa-cart-shopping text-dark"></i>
+								<span class="badge all_btn cart_count position-absolute"
+									style="top:0; right:0; transform: translate(30%,-30%)"
+									th:text="${cartCount}">0</span>
+							</div>
+						</a>
+						<div class="cart_icon rounded-5">
+							<i class="fa-solid fa-user fs-5"></i>
+						</div>
+					</div>
+				</div>
 
-            <!-- ✅ Navbar -->
-            <nav class="navbar navbar-expand-lg bg-white shadow-sm position-sticky"
-                style="top:100px; z-index: 1030; height: 50px;">
-                <div class="container">
-                    <div class="collapse navbar-collapse justify-content-center">
-						<ul class="navbar-nav gap-3">
-						               <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/home}">Home</a></li>
-						               <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/categories}">Categories</a></li>
-						               <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/about}">About Us</a></li>
-						                 <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/order}">My Orders</a></li>
-						                 <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/contact}">Contact</a></li>
-						           </ul>
-                    </div>
-                </div>
+				<!-- Navbar -->
+				<nav class="navbar navbar-expand-lg bg-white shadow-sm position-sticky"
+					style="top:100px; z-index: 1030; height: 50px;">
+					<div class="container">
+						<div class="collapse navbar-collapse justify-content-center">
+							<ul class="navbar-nav gap-3">
+								<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/home}">Home</a></li>
+								<li class="nav-item"><a class="nav-link fw-bold"
+										th:href="@{/user/categories}">Categories</a></li>
+								<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/about}">About Us</a>
+								</li>
+								<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/shop}">Shop</a></li>
+								<!-- New page -->
+								<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/order}">My Orders</a>
+								</li>
+								<li class="nav-item"><a class="nav-link fw-bold" th:href="@{/user/contact}">Contact</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 
-                <form th:action="@{/user/login}" method="get" class="justify-content-end" style="margin: 2%;">
-                    <button class="btn px-3 signup all_btn text-white border shadow-sm">Login</button>
-                </form>
-            </nav>
-        </div>
+					<form th:action="@{/user/login}" method="get" class="justify-content-end" style="margin: 2%;">
+						<button class="btn px-3 signup all_btn text-white border shadow-sm " data-bs-toggle="modal"
+							data-bs-target="#loginModal">Login</button>
+					</form>
+				</nav>
+			</div>
+		</div>
+		<!-- ✅ Empty Middle Section -->
+		<div class="Container">
 
-        <!-- ✅ Empty Middle Section -->
-        <div class="container my-5">
-            <!-- You can add About Us content here later -->
-            <!-- About Section -->
-            <section class="about-section">
-                <div class="container">
-                    <div class="row align-items-center">
+			<!-- About Section -->
+			<section class="about-section">
+				<h2 class="text-center fw-bold mb-4 " style="color:#0a9e94;">About Us</h2>
 
-                        <!-- Left Image -->
-                        <div class="col-md-6 about-img">
-                            <img src="https://klbtheme.com/groci/wp-content/uploads/2018/10/about-img.jpg"
-                                alt="About Us Image">
-                        </div>
+				<div class="Container">
+					<div class="row align-items-center">
 
-                        <!-- Right Text -->
-                        <div class="col-md-6 about-text">
-                            <h2>Save more with GO! We give you the lowest prices on all your grocery needs.</h2>
+						<!-- Left Image -->
+						<div class="col-md-6 about-img">
+						</div>
 
-                            <h4>Our Vision</h4>
-                            <p>
-                                It is a long established fact that a reader will be distracted by the readable
-                                content of a page when looking at its layout. The point of using Lorem Ipsum is that
-                                it has a more-or-less normal distribution of letters, as opposed to using 'Content
-                                here'.
-                            </p>
+						<!-- Right Text -->
+						<div class="col-md-6 ps-4 about-text">
+							<h2 class="fs-3"><b>Save more with GO! We give you the lowest prices on all your grocery
+									needs.</b></h2>
 
-                            <h4>Our Goal</h4>
-                            <p>
-                                When looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less
-                                normal distribution of letters, as opposed to using 'Content here'. Lorem Ipsum has been
-                                the industry's standard dummy text ever since.
-                            </p>
-                        </div>
+							<h5>Our Vision</h5>
+							<p>
+								It is a long established fact that a reader will be distracted by the readable
+								content of a page when looking at its layout. The point of using Lorem Ipsum is that
+								it has a more-or-less normal distribution of letters, as opposed to using 'Content
+								here'.
+							</p>
 
-                    </div>
-                </div>
-            </section>
+							<h5>Our Goal</h5>
+							<p>
+								When looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less
+								normal distribution of letters, as opposed to using 'Content here'. Lorem Ipsum has been
+								the industry's standard dummy text ever since.
+							</p>
+						</div>
 
-            <!-- What We Provide Section -->
-            <section class="provide-section">
-                <div class="container">
-                    <h2>What We Provide?</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <div class="row mt-5">
-                        <div class="col-md-4">
-                            <div class="icon"><i class="fas fa-shopping-bag"></i></div>
-                            <h5>Best Prices & Offers</h5>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have
-                                suffered alteration.</p>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="icon"><i class="fas fa-globe"></i></div>
-                            <h5>Wide Assortment</h5>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="icon"><i class="fas fa-undo-alt"></i></div>
-                            <h5>Easy Returns</h5>
-                            <p>It is a long established fact that a reader will be distracted by the readable content of
-                                a page.</p>
-                        </div>
-                        <div class="col-md-4 mt-4">
-                            <div class="icon"><i class="fas fa-truck"></i></div>
-                            <h5>Free & Next Day Delivery</h5>
-                            <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in
-                                classical literature.</p>
-                        </div>
-                        <div class="col-md-4 mt-4">
-                            <div class="icon"><i class="fas fa-smile"></i></div>
-                            <h5>100% Satisfaction Guarantee</h5>
-                            <p>There are many variations of passages of Lorem Ipsum available, but most have suffered
-                                alteration.</p>
-                        </div>
-                        <div class="col-md-4 mt-4">
-                            <div class="icon"><i class="fas fa-tags"></i></div>
-                            <h5>Great Daily Deals Discount</h5>
-                            <p>It is a long established fact that a reader will be distracted by the readable content of
-                                a page.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+					</div>
+				</div>
+			</section>
 
-        </div>
+			<!-- What We Provide Section -->
+			<section class="provide-section">
+				<div class="container">
+					<h2>What We Provide?</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+					<div class="row mt-5">
+						<div class="col-md-4">
+							<div class="icon"><i class="fas fa-shopping-bag"></i></div>
+							<h5>Best Prices & Offers</h5>
+							<p>There are many variations of passages of Lorem Ipsum available, but the majority have
+								suffered alteration.</p>
+						</div>
+						<div class="col-md-4">
+							<div class="icon"><i class="fas fa-globe"></i></div>
+							<h5>Wide Assortment</h5>
+							<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+						</div>
+						<div class="col-md-4">
+							<div class="icon"><i class="fas fa-undo-alt"></i></div>
+							<h5>Easy Returns</h5>
+							<p>It is a long established fact that a reader will be distracted by the readable content of
+								a page.</p>
+						</div>
+						<div class="col-md-4 mt-4">
+							<div class="icon"><i class="fas fa-truck"></i></div>
+							<h5>Free & Next Day Delivery</h5>
+							<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in
+								classical literature.</p>
+						</div>
+						<div class="col-md-4 mt-4">
+							<div class="icon"><i class="fas fa-smile"></i></div>
+							<h5>100% Satisfaction Guarantee</h5>
+							<p>There are many variations of passages of Lorem Ipsum available, but most have suffered
+								alteration.</p>
+						</div>
+						<div class="col-md-4 mt-4">
+							<div class="icon"><i class="fas fa-tags"></i></div>
+							<h5>Great Daily Deals Discount</h5>
+							<p>It is a long established fact that a reader will be distracted by the readable content of
+								a page.</p>
+						</div>
+					</div>
+				</div>
+			</section>
 
-        <!-- ✅ Footer -->
-        <footer class="footer pt-5 pb-4 shadow">
-            <div class="container">
-                <div class="row row-cols-1 row-cols-md-4 g-4">
+		</div>
 
-                    <!-- About + Social -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">LearnOnline</h5>
-                        <p class="text-white small">Our platform offers interactive tools and flexible learning to make
-                            education engaging for all.</p>
+		<!-- ✅ Footer -->
+		<footer class="footer pt-5 pb-4 shadow">
+			<div class="container">
+				<div class="row row-cols-1 row-cols-md-4 g-4">
 
-                        <h4 class="text-white">Let's Get Social</h4>
-                        <div class="d-flex justify-content-start gap-3 mt-3">
-                            <a href="#" class="text-white"><i class="bi bi-instagram fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-github fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-envelope-fill fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-linkedin fs-5"></i></a>
-                            <a href="#" class="text-white"><i class="bi bi-telegram fs-5"></i></a>
-                        </div>
-                    </div>
+					<!-- About + Social -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">LearnOnline</h5>
+						<p class="text-white small">Our platform offers interactive tools and flexible learning to make
+							education engaging for all.</p>
 
-                    <!-- Quick Links -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">Quick Links</h5>
-                        <ul class="list-unstyled text-white small">
-                            <li><a th:href="@{/user/home}" class="text-white text-decoration-none">Home</a></li>
-                            <li><a th:href="@{/user/categories}" class="text-white text-decoration-none">Categories</a>
-                            </li>
-                            <li><a th:href="@{/user/about}" class="text-white text-decoration-none">About Us</a></li>
-                            <li><a href="#" class="text-white text-decoration-none">Sign Up</a></li>
-                        </ul>
-                    </div>
+						<h4 class="text-white">Let's Get Social</h4>
+						<div class="d-flex justify-content-start gap-3 mt-3">
+							<a href="#" class="text-white"><i class="bi bi-instagram fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-github fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-envelope-fill fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-linkedin fs-5"></i></a>
+							<a href="#" class="text-white"><i class="bi bi-telegram fs-5"></i></a>
+						</div>
+					</div>
 
-                    <!-- Feedback Form -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">Feedback</h5>
-                        <form>
-                            <div class="mb-2">
-                                <input type="text" class="form-control form-control-sm" placeholder="Your Name">
-                            </div>
-                            <div class="mb-2">
-                                <input type="email" class="form-control form-control-sm" placeholder="Your Email">
-                            </div>
-                            <div class="mb-2">
-                                <textarea class="form-control form-control-sm" rows="2"
-                                    placeholder="Your Feedback"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-sm footer_btn all_btn"
-                                style=" color: #ffffff;">Submit</button>
-                        </form>
-                    </div>
+					<!-- Quick Links -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">Quick Links</h5>
+						<ul class="list-unstyled text-white small">
+							<li><a th:href="@{/user/home}" class="text-white text-decoration-none">Home</a></li>
+							<li><a th:href="@{/user/categories}" class="text-white text-decoration-none">Categories</a>
+							</li>
+							<li><a th:href="@{/user/about}" class="text-white text-decoration-none">About Us</a></li>
+							<li><a href="#" class="text-white text-decoration-none">Sign Up</a></li>
+						</ul>
+					</div>
 
-                    <!-- Contact Info -->
-                    <div class="col">
-                        <h5 class="fw-bold mb-3 text-white">Contact Us</h5>
-                        <p class="text-white small"><i class="bi bi-geo-alt-fill me-2"></i>123, Main Street, Pune, India
-                        </p>
-                        <p class="text-white small"><i class="bi bi-telephone-fill me-2"></i>+91 87672 02017</p>
-                        <p class="text-white small"><i class="bi bi-envelope-fill me-2"></i>info@learnonline.com</p>
-                    </div>
+					<!-- Feedback Form -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">Feedback</h5>
+						<form>
+							<div class="mb-2">
+								<input type="text" class="form-control form-control-sm" placeholder="Your Name">
+							</div>
+							<div class="mb-2">
+								<input type="email" class="form-control form-control-sm" placeholder="Your Email">
+							</div>
+							<div class="mb-2">
+								<textarea class="form-control form-control-sm" rows="2"
+									placeholder="Your Feedback"></textarea>
+							</div>
+							<button type="submit" class="btn btn-sm footer_btn all_btn"
+								style=" color: #ffffff;">Submit</button>
+						</form>
+					</div>
 
-                </div>
+					<!-- Contact Info -->
+					<div class="col">
+						<h5 class="fw-bold mb-3 text-white">Contact Us</h5>
+						<p class="text-white small"><i class="bi bi-geo-alt-fill me-2"></i>123, Main Street, Pune, India
+						</p>
+						<p class="text-white small"><i class="bi bi-telephone-fill me-2"></i>+91 87672 02017</p>
+						<p class="text-white small"><i class="bi bi-envelope-fill me-2"></i>info@learnonline.com</p>
+					</div>
 
-                <hr class="border-light mt-4">
+				</div>
 
-                <div class="text-center text-white">
-                    <p class="mb-0 small">&copy; 2025 LearnOnline. All Rights Reserved.</p>
-                </div>
-            </div>
-        </footer>
-    </div>
+				<hr class="border-light mt-4">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+				<div class="text-center text-white">
+					<p class="mb-0 small">&copy; 2025 LearnOnline. All Rights Reserved.</p>
+				</div>
+			</div>
+		</footer>
+	</div>
 
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

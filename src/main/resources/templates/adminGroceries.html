@@ -10,32 +10,25 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
   <style>
-	@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Libertinus+Math&display=swap');		@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-			
-			*
-			{
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Libertinus+Math&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-			    margin: 0px;
-			    padding: 0px;
-			    box-sizing: border-box;
-			   
-			font-family: "Cormorant Infant", serif;
-			}
-			.sidebar_font_size{
-				font-size: 1.1rem;
-			}
-			.logo_font_size{
-				font-size: 1.4rem;
-			}
-			.subheading_font_size{
-				font-size: 1.4rem;
-			}
-			.table_head_font_size{
-				font-size: 1.2rem;
-			}
-			.table_body_font_size{
-				font-size: 1.1rem;
-			}
+    * {
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+      font-family: "Cormorant Infant", serif;
+    }
+
+    html, body {
+      overflow-x: hidden; /* hides horizontal scrollbar */
+    }
+
+    .sidebar_font_size { font-size: 1.1rem; }
+    .logo_font_size { font-size: 1.4rem; }
+    .subheading_font_size { font-size: 1.4rem; }
+    .table_head_font_size { font-size: 1.2rem; }
+    .table_body_font_size { font-size: 1.1rem; }
 
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -43,23 +36,23 @@
       padding: 0;
       background-color:  #fff;
     }
-	
-	.red_btn{
-				background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
-				}
-				
-		.green_btn {
-				 background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
-		}
+
+    .red_btn{
+      background: linear-gradient(135deg, #ff934b 0%, #ff5e62 100%);
+    }
+
+    .green_btn {
+      background: linear-gradient(135deg, #0cc5b7 0%, #2bd891 100%);
+    }
 
     .sidebar {
       background-color: #000;
       color: #fff;
       min-height: 100vh;
+      width: 250px;
       position: fixed;
       top: 0;
       left: 0;
-      width: 250px;
     }
 
     .sidebar h4 {
@@ -82,236 +75,407 @@
     .main-content {
       margin-left: 250px;
       padding: 30px;
+      background-color:  #fff;
       min-height: 100vh;
+      width: calc(100% - 245px);
     }
 
     @media (max-width: 768px) {
       .sidebar {
-        position: relative;
-        width: 100%;
-        min-height: auto;
+        transform: translateX(-100%);
+        width: 240px;
+        transition: transform .28s ease;
+        z-index: 1055;
+        height: 100vh;
+        overflow-y: auto;
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .sidebar .sidebar-close {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        border-width: 1px;
       }
 
       .main-content {
-        margin-left: 0;
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+
+      .mobile-backdrop {
+        display: none;
+      }
+      .mobile-backdrop.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.42);
+        z-index: 1050;
+      }
+
+      body.no-scroll {
+        overflow: hidden;
       }
     }
+	
+	.filter_btn {
+	  font-size: 1rem;
+	  padding: 0.5rem 1.5rem;
+	}
+
+	@media (max-width: 576px) {
+	  .filter_btn {
+	    font-size: 0.8rem;
+	    padding: 0.25rem 0.5rem;
+	  }
+	}
   </style>
 </head>
 <body>
 
-	<div class="row">
-		  <!-- Sidebar -->
-		  <div class="sidebar col-2 sidebar_font_size">
-		    <h4> GroceryShop</h4>
-		    <a href="/admin/dashboard" class="nav-link"><i class="fas fa-home me-2"></i> Dashboard</a>
-		    <a href="/admin/categories" class="nav-link"><i class="fas fa-list me-2"></i> Categories</a>
-		    <a href="/admin/groceries" class="nav-link"><i class="fas fa-shopping-basket me-2"></i> Groceries</a>
-			<a href="/admin/orders" class="nav-link"><i class="fas fa-box me-2"></i> Orders</a>
-			<a href="/admin/users" class="nav-link active"><i class="fas fa-user me-2"></i> Users</a>
-		    <a href="#" class="nav-link"><i class="fas fa-right-from-bracket me-2"></i> Logout</a>
+  <div class="row">
+	    <!-- Sidebar -->
+	    <div class="sidebar sidebar_font_size">
+	      <h4> GroceryShop</h4>
+	
+	      <!-- Close button (mobile) -->
+	      <button id="sidebarClose" class="btn text-white d-md-none sidebar-close" aria-label="Close sidebar">
+	        <i class="fas fa-times"></i>
+	      </button>
+	
+	      <a href="/admin/dashboard" class="nav-link"><i class="fas fa-home me-2"></i> Dashboard</a>
+	      <a href="/admin/categories" class="nav-link"><i class="fas fa-list me-2"></i> Categories</a>
+	      <a href="/admin/groceries" class="nav-link"><i class="fas fa-shopping-basket me-2"></i> Groceries</a>
+	      <a href="/admin/orders" class="nav-link"><i class="fas fa-box me-2"></i> Orders</a>
+	      <a href="/admin/users" class="nav-link active"><i class="fas fa-user me-2"></i> Users</a>
+	      <a href="/admin/logout" class="nav-link">
+	        <i class="fas fa-right-from-bracket me-2"></i> Logout
+	      </a>
+	    </div>
+	
+	    <!-- Main Content -->
+	    <div class="main-content">
+	      <nav class="navbar px-4 py-3 bg-white border mb-5 rounded-3 shadow" style="height: 80px;">
+	        <div class="d-flex justify-content-between w-100 align-items-center">
+				<div class="d-flex justify-content-between align-items-center w-100">
+				    <h5 class="d-inline-block mb-0 ms-2">Admin Dashboard</h5>
+	
+				    <!-- Hamburger button (mobile) on right -->
+				    <button id="sidebarToggle" class="btn btn-outline-secondary d-md-none" aria-label="Open sidebar">
+				        <i class="fas fa-bars"></i>
+				    </button>
+				</div>
+	        </div>
+	      </nav>
+
+      <!-- Grocery Items Section -->
+      <div class="container mt-2">
+        <div class="d-flex justify-content-between mb-3">
+          <h3 class="subheading_font_size">Grocery Items</h3>
+          <button class="btn green_btn text-white fs-6" data-bs-toggle="modal" data-bs-target="#addGroceryModal"><i class="fas fa-plus me-1"></i> Add Grocery</button>
+        </div>
+		
+		<!-- Filter Buttons -->
+		<!--
+		<div class="mb-3 d-flex justify-content-start gap-3 align-items-center flex-wrap">
+
+		  
+		  <div>
+		    <form th:action="@{/admin/groceries}" method="get">
+		      <select class="form-select shadow-sm filter_btn" name="category">
+		        <option value="">Filter by Category</option>
+		        <option value="Fruits">Fruits</option>
+		        <option value="Vegetables">Vegetables</option>
+		        <option value="Dairy">Dairy</option>
+		        <option value="Bakery">Bakery</option>
+		      </select>
+		    </form>
 		  </div>
 
-		  <!-- Main Content -->
-		  <div class="main-content col-10">
-		    <nav class="navbar px-4 py-3 bg-white border mb-5 rounded-3 shadow" style="height: 80px;">
-		      <div class="d-flex justify-content-between w-100 align-items-center">
-		        <div>
-		          <h5 class="d-inline-block mb-0 ms-2">Admin Dashboard</h5>
-		        </div>
-		        <div class="mentor-info">
-		          <span class="fw-semibold text-dark">Nalinee</span>
-		        </div>
-		      </div>
-		    </nav>
-			
-    <!-- Grocery Items Section -->
-    <div class="container mt-2">
-      <h3 class="subheading_font_size">Grocery Items</h3>
-      <div class="d-flex justify-content-end mb-3">
-        <button class="btn green_btn" data-bs-toggle="modal" data-bs-target="#addGroceryModal">+ Add Grocery</button>
+		 
+		  <div class="position-relative">
+		    <button type="button" class="btn border shadow-sm filter_btn" onclick="togglePriceFilter()">Price Range</button>
+		   
+		    <div id="priceFilterDropdown"
+		         class="shadow p-3 bg-white rounded border"
+		         style="display:none; position:absolute; top:110%; left:0; z-index:1000; min-width:250px;">
+		      <form th:action="@{/admin/groceries}" method="get" class="d-flex flex-column gap-2">
+		        <input type="number" name="minPrice" class="form-control" placeholder="Min Price">
+		        <input type="number" name="maxPrice" class="form-control" placeholder="Max Price">
+		        <button class="btn btn-primary btn-sm" type="submit">Apply</button>
+		      </form>
+		    </div>
+		  </div>
+
+		 
+		  <div>
+		    <form th:action="@{/admin/groceries}" method="get">
+		      <select class="form-select shadow-sm filter_btn gap-2" name="discount">
+		        <option value="">Filter by Discount</option>
+		        <option value="10">10% or more</option>
+		        <option value="20">20% or more</option>
+		        <option value="30">30% or more</option>
+		        <option value="50">50% or more</option>
+		      </select>
+		    </form>
+		  </div>
+
+		  
+		  <div class="position-relative">
+		    <select id="dateFilter" class="form-select shadow-sm filter_btn" name="dateFilter">
+		      <option value="">Filter by Date</option>
+		      <option value="today">Today</option>
+		      <option value="yesterday">Yesterday</option>
+		      <option value="thisWeek">This Week</option>
+		      <option value="lastWeek">Last Week</option>
+		      <option value="thisMonth">This Month</option>
+		      <option value="lastMonth">Last Month</option>
+		      <option value="thisYear">This Year</option>
+		      <option value="lastYear">Last Year</option>
+		      <option value="custom">Custom Date</option>
+		    </select>
+
+		    
+		    <div id="customDateDropdown"
+		         class="shadow p-3 bg-white rounded border"
+		         style="display:none; position:absolute; top:110%; left:0; z-index:1000; min-width:250px;">
+		      <form th:action="@{/admin/groceries}" method="get" class="d-flex flex-column gap-2">
+		        <input type="date" name="startDate" class="form-control" required>
+		        <input type="date" name="endDate" class="form-control" required>
+		        <button class="btn btn-primary btn-sm" type="submit">Apply</button>
+		      </form>
+		    </div>
+		  </div>
+
+		</div>
+		
+		-->
+		<!-- JS to toggle dropdowns -->
+		<script>
+		  // Toggle Price Filter Dropdown
+		  function togglePriceFilter() {
+		    const dropdown = document.getElementById('priceFilterDropdown');
+		    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+		  }
+
+		  // Toggle Custom Date Picker
+		  document.getElementById("dateFilter").addEventListener("change", function () {
+		    const customDropdown = document.getElementById("customDateDropdown");
+		    if (this.value === "custom") {
+		      customDropdown.style.display = "block";
+		    } else {
+		      customDropdown.style.display = "none";
+		    }
+		  });
+		</script>
+
+
+        <div class="shadow bg-white w-100 p-4" style="font-family:'Cormorant Infant', serif;">
+  <div class="table-responsive">
+    <table class="table text-center">
+      <thead class="table_head_font_size">
+        <tr>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Discount (%)</th>
+          <th>Discounted Price</th>
+          <th>Quantity</th>
+          <th>Created Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody class="table_body_font_size">
+        <tr th:each="g : ${groceries}">
+          <td th:text="${g.name}"></td>
+          <td>
+            <img th:src="@{'/GroceryWeb/uploads/groceries/' + ${g.image}}" width="70" class="img-thumbnail" />
+          </td>
+          <td th:text="${g.category != null ? g.category.name : 'N/A'}"></td>
+          <td th:text="${g.price}"></td>
+          <td th:text="${g.discountPercent != null ? g.discountPercent + '%': '0%'}"></td>
+          <td th:text="${g.discountedPrice != null ? g.discountedPrice : g.price}"></td>
+          <td th:text="${g.quantity}"></td>
+          <td th:text="${#temporals.format(g.createdDate, 'dd-MM-yyyy HH:mm')}"></td>
+          <td>
+            <!-- Edit Button -->
+            <a href="#" 
+               class="btn red_btn btn-sm m-1" 
+               data-bs-toggle="modal" 
+               th:data-bs-target="${'#editModal_' + g.id}">
+                <i class="fas fa-edit"></i>
+            </a>
+
+            <!-- Delete Button -->
+            <a th:href="@{'/admin/grocery/delete/' + ${g.id}}" 
+               class="btn red_btn btn-sm" 
+               onclick="return confirm('Are you sure you want to delete this item?')">
+                <i class="fas fa-trash"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
       </div>
-
-	  <div class="shadow bg-white w-100 p-4">
-	    <table class="table  text-center">
-	    <thead class="table_head_font_size">
-	      <tr>
-	        <th>Name</th>
-			<th>Image</th>
-	        <th>Category</th>
-	        <th>Price</th>
-	        <th>Discount (%)</th>
-	        <th>Discounted Price</th>
-	        <th>Quantity</th>
-	        <th>Created Date</th>
-	        
-	        <th>Action</th>
-	      </tr>
-	    </thead>
-	    <tbody class="table_body_font_size">
-	      <tr th:each="g : ${groceries}">
-	        <td th:text="${g.name}"></td>
-			<td>
-				<img th:src="@{'/GroceryWeb/uploads/groceries/' + ${g.image}}" width="70" class="img-thumbnail" />
-			</td>
-	        <td th:text="${g.category != null ? g.category.name : 'N/A'}"></td>
-	        <td th:text="${g.price}"></td>
-			<td th:text="${g.discountPercent != null ? g.discountPercent + '%': '0%'}"></td>
-			<td th:text="${g.discountedPrice != null ? g.discountedPrice : g.price}"></td>
-	        <td th:text="${g.quantity}"></td>
-			<td th:text="${#temporals.format(g.createdDate, 'dd-MM-yyyy HH:mm')}"></td>
-	        
-			<td>
-			    <!-- Edit Button (Triggers Modal) -->
-			    <a href="#" 
-			       class="btn red_btn btn-sm" 
-			       data-bs-toggle="modal" 
-			       th:data-bs-target="${'#editModal_' + g.id}">
-			        <i class="fas fa-edit"></i>
-			    </a>
-
-			    <!-- Delete Button (Confirm before delete) -->
-			    <a th:href="@{'/admin/grocery/delete/' + ${g.id}}" 
-			       class="btn red_btn btn-sm" 
-			       onclick="return confirm('Are you sure you want to delete this item?')">
-			        <i class="fas fa-trash"></i>
-			    </a>
-			</td>
-	      </tr>
-	    </tbody>
-	  </table>
-	  </div>
     </div>
   </div>
-</div>
 
-<!-- Add Grocery Modal -->
-<div class="modal fade" id="addGroceryModal" tabindex="-1" aria-labelledby="addGroceryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form th:action="@{/admin/grocery/save}" method="post" enctype="multipart/form-data">
-        <div class="modal-header green_btn">
-          <h5 class="modal-title " id="addGroceryModalLabel">Add Grocery Item</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Grocery Name</label>
-            <input type="text" class="form-control" name="name" required>
+  <!-- Add Grocery Modal -->
+  <div class="modal fade" id="addGroceryModal" tabindex="-1" aria-labelledby="addGroceryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form th:action="@{/admin/grocery/save}" method="post" enctype="multipart/form-data">
+          <div class="modal-header green_btn">
+            <h5 class="modal-title " id="addGroceryModalLabel">Add Grocery Item</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Price</label>
-            <input type="number" class="form-control" name="price" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Discount (%)</label>
-            <input type="number" class="form-control" name="discountPercent" placeholder="e.g. 20">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Quantity</label>
-            <input type="number" class="form-control" name="quantity" placeholder="Default: 10">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Category</label>
-            <select name="category.id" class="form-select" required>
-              <option disabled selected value="">-- Select Category --</option>
-              <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" class="form-control" name="imageFile" required>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn red_btn text-white">Save</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Edit Grocery Modals -->
-<div th:each="g : ${groceries}">
-    <div class="modal fade" th:id="'editModal_' + ${g.id}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <form th:action="@{/admin/grocery/update}" method="post" enctype="multipart/form-data">
-                    <div class="modal-header green_btn">
-                        <h5 class="modal-title">Edit Grocery</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <!-- Hidden Grocery ID -->
-                        <input type="hidden" name="id" th:value="${g.id}" />
-
-                        <!-- Name -->
-                        <div class="mb-3">
-                            <label class="form-label">Name:</label>
-                            <input type="text" name="name" th:value="${g.name}" class="form-control" required>
-                        </div>
-
-                        <!-- Category Dropdown -->
-                        <div class="mb-3">
-                            <label class="form-label">Category:</label>
-                            <select name="category.id" class="form-select" required>
-                                <option value="" disabled>Select Category</option>
-                                <option th:each="c : ${categories}"
-                                        th:value="${c.id}"
-                                        th:selected="${c.id == g.category.id}"
-                                        th:text="${c.name}">
-                                </option>
-                            </select>
-                        </div>
-
-                        <!-- Price -->
-                        <div class="mb-3">
-                            <label class="form-label">Price:</label>
-                            <input type="number" name="price" th:value="${g.price}" class="form-control" required>
-                        </div>
-
-                        <!-- Discount Percent -->
-                        <div class="mb-3">
-                            <label class="form-label">Discount %:</label>
-                            <input type="number" step="0.1" min="0" name="discountPercent"
-                                   th:value="${g.discountPercent != null ? g.discountPercent : 0.0}"
-                                   class="form-control">
-                        </div>
-
-                        <!-- Current Image Preview -->
-                        <div class="mb-3" th:if="${g.image != null}">
-                            <label class="form-label">Current Image:</label><br>
-                            <img th:src="@{'/GroceryWeb/uploads/groceries/' + ${g.image}}" width="70" class="img-thumbnail" />
-                        </div>
-
-                        <!-- Upload New Image -->
-                        <div class="mb-3">
-                            <label class="form-label">Upload New Image (optional):</label>
-                            <input type="file" name="imageFile" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Update</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Grocery Name</label>
+              <input type="text" class="form-control" name="name" required>
             </div>
-        </div>
+
+            <div class="mb-3">
+              <label class="form-label">Price</label>
+              <input type="number" class="form-control" name="price" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Discount (%)</label>
+              <input type="number" class="form-control" name="discountPercent" placeholder="e.g. 20">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Quantity</label>
+              <input type="number" class="form-control" name="quantity" placeholder="Default: 10">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Category</label>
+              <select name="category.id" class="form-select" required>
+                <option disabled selected value="">-- Select Category --</option>
+                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Image</label>
+              <input type="file" class="form-control" name="imageFile" required>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn red_btn text-white">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div>
 
+  <!-- Edit Grocery Modals -->
+  <div th:each="g : ${groceries}">
+    <div class="modal fade" th:id="'editModal_' + ${g.id}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form th:action="@{/admin/grocery/update}" method="post" enctype="multipart/form-data">
+            <div class="modal-header green_btn">
+              <h5 class="modal-title">Edit Grocery</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <div class="modal-body">
+              <input type="hidden" name="id" th:value="${g.id}" />
+
+              <div class="mb-3">
+                <label class="form-label">Name:</label>
+                <input type="text" name="name" th:value="${g.name}" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Category:</label>
+                <select name="category.id" class="form-select" required>
+                  <option value="" disabled>Select Category</option>
+                  <option th:each="c : ${categories}" th:value="${c.id}" th:selected="${c.id == g.category.id}" th:text="${c.name}"></option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Price:</label>
+                <input type="number" name="price" th:value="${g.price}" class="form-control" required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Discount %:</label>
+                <input type="number" step="0.1" min="0" name="discountPercent"
+                       th:value="${g.discountPercent != null ? g.discountPercent : 0.0}"
+                       class="form-control">
+              </div>
+
+              <div class="mb-3" th:if="${g.image != null}">
+                <label class="form-label">Current Image:</label><br>
+                <img th:src="@{'/GroceryWeb/uploads/groceries/' + ${g.image}}" width="70" class="img-thumbnail" />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Upload New Image (optional):</label>
+                <input type="file" name="imageFile" class="form-control">
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Update</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Backdrop -->
+  <div id="mobileBackdrop" class="mobile-backdrop"></div>
+
+  <!-- JS for Sidebar Toggle -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const closeBtn = document.getElementById('sidebarClose');
+    const backdrop = document.getElementById('mobileBackdrop');
+
+    function openSidebar() {
+      sidebar.classList.add('show');
+      backdrop.classList.add('show');
+      document.body.classList.add('no-scroll');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('show');
+      backdrop.classList.remove('show');
+      document.body.classList.remove('no-scroll');
+    }
+
+    toggleBtn.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    backdrop.addEventListener('click', closeSidebar);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSidebar();
+    });
+  });
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -5,8 +5,8 @@ import com.Grocery.model.user;
 
 public interface userRepo extends JpaRepository<user, Long> {
 
-    user findByMobileAndPassword(String mobile, String password);
+	user findByMobileAndPassword(String mobile, String password);
 
-    user findByMobile(String mobile); 
+	user findByMobile(String mobile);
 
 }

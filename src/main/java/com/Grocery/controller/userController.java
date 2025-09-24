@@ -29,287 +29,337 @@ import com.Grocery.repository.orderItemRepo;
 import com.Grocery.repository.cartRepo;
 
 import com.Grocery.repository.serviceRepo;
-import com.Grocery.repository.teamRepo;
 
 @Controller
 @RequestMapping("/user")
 public class userController {
 
-    @Autowired
-    private userRepo repo;
+	@Autowired
+	private userRepo repo;
 
-    @Autowired
-    private categoryRepo categoryRepo;
+	@Autowired
+	private categoryRepo categoryRepo;
 
-    @Autowired
-    private groceryRepo groceryRepo;
-    
-    @Autowired
-    private orderItemRepo orderItemRepo;
+	@Autowired
+	private groceryRepo groceryRepo;
 
-    @Autowired
-    private cartRepo cartRepo;
+	@Autowired
+	private orderItemRepo orderItemRepo;
 
-    @Autowired
-    private serviceRepo serviceRepo;
-    
-    @Autowired
-    private orderRepo orderRepo;
+	@Autowired
+	private cartRepo cartRepo;
 
-    @Autowired
-    private teamRepo teamRepo;
+	@Autowired
+	private serviceRepo serviceRepo;
 
-    // ----------- Registration Page -----------
-    @GetMapping("/register")
-    public String showUserForm(Model model) {
-        model.addAttribute("user", new user());
-        return "registration";
-    }
+	@Autowired
+	private orderRepo orderRepo;
 
-    @PostMapping("/saveUser")
-    public String saveUser(@ModelAttribute("user") user u) {       
-        repo.save(u); 
-        return "redirect:/user/login";
-    }
+	// ----------- Registration Page -----------
+	@GetMapping("/register")
+	public String showUserForm(Model model) {
+		model.addAttribute("user", new user());
+		return "registration";
+	}
 
-    // ----------- Login Page -----------
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }
+	@PostMapping("/saveUser")
+	public String saveUser(@ModelAttribute("user") user u) {
+		repo.save(u);
+		return "redirect:/user/login";
+	}
 
-    @PostMapping("/login")
-    public String loginUser(@RequestParam String mobile,
-                            @RequestParam String password,
-                            Model model, HttpSession session) {
-        user existingUser = repo.findByMobileAndPassword(mobile, password);
-        if (existingUser != null) {
-            session.setAttribute("loginUser", existingUser);
-            return "redirect:/user/home";
-        } else {
-            model.addAttribute("error", "Invalid credentials!");
-            return "login";
-        }
-    }
+	// ----------- Login Page -----------
+	@GetMapping("/login")
+	public String showLoginForm() {
+		return "login";
+	}
 
-    // ----------- Home Page with Categories -----------
-    @GetMapping("/home")
-    public String userHome(HttpSession session, Model model) {
-        List<category> categories = categoryRepo.findByIsDeleteFalse();
-        model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
+	@PostMapping("/login")
+	public String loginUser(@RequestParam String mobile, @RequestParam String password, Model model,
+			HttpSession session) {
+		user existingUser = repo.findByMobileAndPassword(mobile, password);
+		if (existingUser != null) {
+			session.setAttribute("loginUser", existingUser);
+			return "redirect:/user/home";
+		} else {
+			model.addAttribute("error", "Invalid credentials!");
+			return "login";
+		}
+	}
 
-        List<grocery> topOffers = groceryRepo.findTop8ByDeleteFalseAndCategoryIsDeleteFalseOrderByDiscountPercentDesc();
-        model.addAttribute("topOffers", topOffers != null ? topOffers : new ArrayList<>());
+	// ----------- Categories Page -----------
+	@GetMapping("/categories")
+	public String showCategoriesPage(Model model, HttpSession session) {
+		// Fetch all categories from DB
+		model.addAttribute("categories", categoryRepo.findByIsDeleteFalse());
 
-        user loggedInUser = (user) session.getAttribute("loginUser");
-        int cartCount = 0;
-        if (loggedInUser != null) {
-            List<cart> userCart = cartRepo.findByUserId(loggedInUser.getId());
-            cartCount = userCart != null ? userCart.size() : 0;
-        }
-        model.addAttribute("cartCount", cartCount);
+		// If user logged in, add cart count
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		if (loggedInUser != null) {
+			List<cart> userCart = cartRepo.findByUserId(loggedInUser.getId());
+			model.addAttribute("cartCount", userCart.size());
+		}
 
-        return "home";
-    }
+		return "categories"; // loads categories.html
+	}
 
+	// ----------- Home Page with Categories -----------
+	@GetMapping("/home")
+	public String userHome(HttpSession session, Model model) {
+		List<category> categories = categoryRepo.findByIsDeleteFalse();
+		model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
 
-    // ----------- Show Grocery Items by Category -----------
-    @GetMapping("/category/{id}/items")
-    public String showItemsByCategory(@PathVariable Long id,
-                                      HttpSession session,
-                                      Model model) {
+		List<grocery> topOffers = groceryRepo.findTop8ByDeleteFalseAndCategoryIsDeleteFalseOrderByDiscountPercentDesc();
+		model.addAttribute("topOffers", topOffers != null ? topOffers : new ArrayList<>());
 
-        List<grocery> items = groceryRepo.findByCategoryIdAndDeleteFalseAndCategoryIsDeleteFalse(id);
-        model.addAttribute("groceryItems", items);
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		int cartCount = 0;
+		if (loggedInUser != null) {
+			List<cart> userCart = cartRepo.findByUserId(loggedInUser.getId());
+			cartCount = userCart != null ? userCart.size() : 0;
+		}
+		model.addAttribute("cartCount", cartCount);
 
-        user loggedInUser = (user) session.getAttribute("loginUser");
-        if (loggedInUser != null) {
-            List<cart> cartItems = cartRepo.findByUserId(loggedInUser.getId());
-            model.addAttribute("cartCount", cartItems.size());               }
+		return "home";
+	}
 
-        return "groceryItems";
-    }
+	// ----------- Show Grocery Items by Category -----------
+	@GetMapping("/category/{id}/items")
+	public String showItemsByCategory(@PathVariable Long id, HttpSession session, Model model) {
 
-    // ----------- Add to Cart -----------
-    @PostMapping("/addToCart")
-    public String addToCart(@RequestParam Long groceryId,
-                            @RequestParam int quantity,
-                            @RequestParam(required = false) String redirectUrl,
-                            HttpSession session) {
+		List<grocery> items = groceryRepo.findByCategoryIdAndDeleteFalseAndCategoryIsDeleteFalse(id);
+		model.addAttribute("groceryItems", items);
 
-        user loggedInUser = (user) session.getAttribute("loginUser");
-        if (loggedInUser == null) {
-            return "redirect:/user/login";
-        }
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		if (loggedInUser != null) {
+			List<cart> cartItems = cartRepo.findByUserId(loggedInUser.getId());
+			model.addAttribute("cartCount", cartItems.size());
+		}
 
-        grocery item = groceryRepo.findById(groceryId).orElse(null);
+		return "groceryItems";
+	}
 
-        if (item != null) {
-            cart existingCartItem = cartRepo.findByGroceryItemIdAndUser(groceryId, loggedInUser);
+	// ----------- Add to Cart -----------
+	@PostMapping("/addToCart")
+	public String addToCart(@RequestParam Long groceryId, @RequestParam int quantity,
+			@RequestParam(required = false) String redirectUrl, HttpSession session) {
 
-            if (existingCartItem != null) {
-                existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-                double subtotal = existingCartItem.getQuantity() * existingCartItem.getGroceryItem().getPrice();
-                existingCartItem.setSubtotal(subtotal);
-                cartRepo.save(existingCartItem);
-            } else {
-                cart newCart = new cart();
-                newCart.setGroceryItem(item);
-                newCart.setUser(loggedInUser);  // ✅ using user object
-                newCart.setQuantity(quantity);
-                newCart.setSubtotal(item.getPrice() * quantity);
-                cartRepo.save(newCart);
-            }
-        }
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		if (loggedInUser == null) {
+			return "redirect:/user/login";
+		}
 
-        if (redirectUrl != null && !redirectUrl.isEmpty()) {
-            return "redirect:" + redirectUrl;
-        }
+		grocery item = groceryRepo.findById(groceryId).orElse(null);
 
-        return "redirect:/user/home";
-    }
+		if (item != null) {
+			cart existingCartItem = cartRepo.findByGroceryItemIdAndUser(groceryId, loggedInUser);
 
-    // ----------- Show Cart -----------
-    @GetMapping("/cart")
-    public String showCart(HttpSession session, Model model) {
-        user loggedInUser = (user) session.getAttribute("loginUser");
-        if (loggedInUser == null) {
-            return "redirect:/user/login";
-        }
+			if (existingCartItem != null) {
+				existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+				double subtotal = existingCartItem.getQuantity() * existingCartItem.getGroceryItem().getPrice();
+				existingCartItem.setSubtotal(subtotal);
+				cartRepo.save(existingCartItem);
+			} else {
+				cart newCart = new cart();
+				newCart.setGroceryItem(item);
+				newCart.setUser(loggedInUser); // ✅ using user object
+				newCart.setQuantity(quantity);
+				newCart.setSubtotal(item.getPrice() * quantity);
+				cartRepo.save(newCart);
+			}
+		}
 
-        String mobile = loggedInUser.getMobile();
-        user u=(user) session.getAttribute("loginUser");
-        List<cart> cartItems = cartRepo.findByUserId(u.getId());
+		if (redirectUrl != null && !redirectUrl.isEmpty()) {
+			return "redirect:" + redirectUrl;
+		}
 
-        double totalPrice = 0;
-        for (cart item : cartItems) {
-            if (item != null && item.getGroceryItem() != null) {
-                totalPrice += item.getGroceryItem().getPrice() * item.getQuantity();
-            }
-        }
+		return "redirect:/user/home";
+	}
 
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("totalPrice", totalPrice);
+	// ----------- Show Cart -----------
+	@GetMapping("/cart")
+	public String showCart(HttpSession session, Model model) {
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		if (loggedInUser == null) {
+			return "redirect:/user/login";
+		}
 
-   
-        return "cartItems";
-    }
-    
-    // ----------- Update Cart Quantity -----------
-    @PostMapping("/cart/updateQuantity")
-    public String updateCartQuantity(@RequestParam("cartId") List<Long> cartIds,
-                                     @RequestParam("quantity") List<Integer> quantities,
-                                     HttpSession session,
-                                     Model model) {
+		String mobile = loggedInUser.getMobile();
+		user u = (user) session.getAttribute("loginUser");
+		List<cart> cartItems = cartRepo.findByUserId(u.getId());
 
-        user loggedInUser = (user) session.getAttribute("loginUser");
-        if (loggedInUser == null) {
-            return "redirect:/user/login";
-        }
+		double totalPrice = 0;
+		for (cart item : cartItems) {
+			if (item != null && item.getGroceryItem() != null) {
+				totalPrice += item.getGroceryItem().getPrice() * item.getQuantity();
+			}
+		}
 
-        String mobile = loggedInUser.getMobile();
+		model.addAttribute("cartItems", cartItems);
+		model.addAttribute("totalPrice", totalPrice);
 
-        for (int i = 0; i < cartIds.size(); i++) {
-            Long id = cartIds.get(i);
-            int qty = quantities.get(i);
+		return "cartItems";
+	}
 
-            cart cartItem = cartRepo.findById(id).orElse(null);
-            if (cartItem != null) {
-                cartItem.setQuantity(qty);
-                cartItem.setSubtotal(cartItem.getGroceryItem().getPrice() * qty);
-                cartRepo.save(cartItem);
-            }
-        }
+	// ----------- Update Cart Quantity -----------
+	@PostMapping("/cart/updateQuantity")
+	public String updateCartQuantity(@RequestParam("cartId") List<Long> cartIds,
+			@RequestParam("quantity") List<Integer> quantities, HttpSession session, Model model) {
 
-        user u=(user) session.getAttribute("loginUser");
-        List<cart> cartItems = cartRepo.findByUserId(u.getId());
-        double totalPrice = 0;
-        for (cart item : cartItems) {
-            totalPrice += item.getGroceryItem().getPrice() * item.getQuantity();
-        }
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		if (loggedInUser == null) {
+			return "redirect:/user/login";
+		}
 
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("totalPrice", totalPrice);
-        return "cartItems";
-    }
+		String mobile = loggedInUser.getMobile();
 
-    // ----------- Remove from Cart -----------
-    @GetMapping("/cart/remove")
-    public String removeCartItem(@RequestParam Long id,
-                                 HttpSession session) {
-        user loggedInUser = (user) session.getAttribute("loginUser");
-        if (loggedInUser == null) {
-            return "redirect:/user/login";
-        }
+		for (int i = 0; i < cartIds.size(); i++) {
+			Long id = cartIds.get(i);
+			int qty = quantities.get(i);
 
-        cartRepo.deleteById(id);
-        return "redirect:/user/cart";
-    }
+			cart cartItem = cartRepo.findById(id).orElse(null);
+			if (cartItem != null) {
+				cartItem.setQuantity(qty);
+				cartItem.setSubtotal(cartItem.getGroceryItem().getPrice() * qty);
+				cartRepo.save(cartItem);
+			}
+		}
 
-    // ----------- Contact Us Page -----------
-    @GetMapping("/contact")
-    public String contactForm() {
-        return "contact";
-    }
+		user u = (user) session.getAttribute("loginUser");
+		List<cart> cartItems = cartRepo.findByUserId(u.getId());
+		double totalPrice = 0;
+		for (cart item : cartItems) {
+			totalPrice += item.getGroceryItem().getPrice() * item.getQuantity();
+		}
 
-    // ----------- About Us Page -----------
-    @GetMapping("/about")
-    public String showAboutPage(Model model) {
-        model.addAttribute("services", serviceRepo.findAll());
-        model.addAttribute("team", teamRepo.findAll());
-        return "about";
-    }
+		model.addAttribute("cartItems", cartItems);
+		model.addAttribute("totalPrice", totalPrice);
+		return "cartItems";
+	}
 
-    // ----------- Default Redirect -----------
-    @GetMapping("/")
-    public String indexPage() {
-        return "redirect:/user/login";
-    }
-    @Transactional
+	// ----------- Remove from Cart -----------
+	@GetMapping("/cart/remove")
+	public String removeCartItem(@RequestParam Long id, HttpSession session) {
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		if (loggedInUser == null) {
+			return "redirect:/user/login";
+		}
 
-    @PostMapping("/checkout")
-    public String placeOrder(HttpSession session, Model model) {
+		cartRepo.deleteById(id);
+		return "redirect:/user/cart";
+	}
 
-        user u = (user) session.getAttribute("loginUser");
-        if (u == null) {
-            return "redirect:/user/home";
-        }
+	// ----------- Contact Us Page -----------
+	@GetMapping("/contact")
+	public String contactForm() {
+		return "contact";
+	}
 
-        List<cart> cartItems = cartRepo.findByUserId(u.getId());
-        if (cartItems == null || cartItems.isEmpty()) {
-            // no items in cart -> redirect or show message
-            return "redirect:/cart";
-        }
+	// ----------- About Us Page -----------
+	@GetMapping("/about")
+	public String showAboutPage(Model model) {
+		return "about";
+	}
 
-        // calculate total
-        double total = cartItems.stream().mapToDouble(cart::getSubtotal).sum();
+	// ----------- Shop Page (All Grocery Items) -----------
+	@GetMapping("/shop")
+	public String showShopPage(HttpSession session, Model model) {
 
-        // create Order (no productName / quantity here)
-        order o = new order();
-        o.setOrderId("ORD" + new Random().nextInt(10000));
-        o.setCustomerName(u.getUserName());
-        o.setTotalAmount(total);
-        o.setDate(LocalDate.now());
-        o.setStatus("Pending");
-        o.setUser(u); // link user if needed
+		// fetch groceries (non-deleted + category non-deleted)
+		List<grocery> groceryItems = groceryRepo.findByDeleteFalseAndCategoryIsDeleteFalse();
+		model.addAttribute("groceries", groceryItems != null ? groceryItems : new ArrayList<>());
 
-        // save order first to get generated ID
-        order savedOrder = orderRepo.save(o);
+		// cart count (if logged in)
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		int cartCount = 0;
+		if (loggedInUser != null) {
+			List<cart> userCart = cartRepo.findByUserId(loggedInUser.getId());
+			cartCount = userCart != null ? userCart.size() : 0;
+		}
+		model.addAttribute("cartCount", cartCount);
 
-        for (cart c : cartItems) {
-            orderItem oi = new orderItem();
-            oi.setGroceryItem(c.getGroceryItem());
-            oi.setQuantity(c.getQuantity());
-            oi.setOrder(savedOrder);
-            orderItemRepo.save(oi);
-        }
+		model.addAttribute("isLoggedIn", loggedInUser != null);
+		return "shop"; // ensure template name is shop.html in templates folder
+	}
 
-        // clear user's cart
-        cartRepo.deleteByUserId(u.getId());
+	// ----------- My Orders Page (show only orders of logged-in user) -----------
+	@GetMapping("/order")
+	public String myOrders(HttpSession session, Model model) {
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		if (loggedInUser == null) {
+			return "redirect:/user/login"; // user not logged in
+		}
 
-        model.addAttribute("order", savedOrder);
-        return "orderConfirmation";
-    }
+		// fetch only this user’s orders
+		List<order> userOrders = orderRepo.findByUser(loggedInUser);
 
+		model.addAttribute("orders", userOrders);
+		model.addAttribute("loginUser", loggedInUser);
+
+		return "order"; // maps to order.html
+	}
+
+	// ----------- Default Redirect -----------
+	@GetMapping("/")
+	public String indexPage() {
+		return "redirect:/user/login";
+	}
+
+	@Transactional
+
+	@PostMapping("/checkout")
+	public String placeOrder(HttpSession session, Model model) {
+
+		user u = (user) session.getAttribute("loginUser");
+		if (u == null) {
+			return "redirect:/user/home";
+		}
+
+		List<cart> cartItems = cartRepo.findByUserId(u.getId());
+		if (cartItems == null || cartItems.isEmpty()) {
+			// no items in cart -> redirect or show message
+			return "redirect:/cart";
+		}
+
+		// calculate total
+		double total = cartItems.stream().mapToDouble(cart::getSubtotal).sum();
+
+		// create Order (no productName / quantity here)
+		order o = new order();
+		o.setOrderId("ORD" + new Random().nextInt(10000));
+		o.setCustomerName(u.getUserName());
+		o.setTotalAmount(total);
+		o.setDate(LocalDate.now());
+		o.setStatus("Pending");
+		o.setUser(u); // link user if needed
+
+		// save order first to get generated ID
+		order savedOrder = orderRepo.save(o);
+
+		for (cart c : cartItems) {
+			orderItem oi = new orderItem();
+			oi.setGroceryItem(c.getGroceryItem());
+			oi.setQuantity(c.getQuantity());
+			oi.setOrder(savedOrder);
+			orderItemRepo.save(oi);
+		}
+
+		// clear user's cart
+		cartRepo.deleteByUserId(u.getId());
+
+		model.addAttribute("order", savedOrder);
+		return "orderConfirmation";
+	}
+
+	@ModelAttribute
+	public void addCartCount(Model model, HttpSession session) {
+		user loggedInUser = (user) session.getAttribute("loginUser");
+		int cartCount = 0;
+		if (loggedInUser != null) {
+			List<cart> userCart = cartRepo.findByUserId(loggedInUser.getId());
+			cartCount = userCart != null ? userCart.size() : 0;
+		}
+		model.addAttribute("cartCount", cartCount);
+	}
 
 }
